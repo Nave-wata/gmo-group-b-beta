@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import Link from "next/link";
 
 type Event = {
   "id": number,
@@ -38,7 +39,7 @@ export default function Page() {
   const [reserveNum, setReserveNum] = useState({
     "num": 15,
   });
-  
+
   const router = useRouter();
 
   useEffect(() => {
@@ -46,25 +47,25 @@ export default function Page() {
       const eventId = router.query.id;
       const fetchEvent = async () => {
         const response = await fetch(`/api/event/${eventId}`);
-      const data = await response.json();
-      setEvent(data);
-    };
-    const fetchReserveNum = async () => {
-      const response = await fetch(`/api/reserver/${eventId}`)
-      const data = await response.json();
-      setReserveNum(data);
+        const data = await response.json();
+        setEvent(data);
+      };
+      const fetchReserveNum = async () => {
+        const response = await fetch(`/api/reserver/${eventId}`)
+        const data = await response.json();
+        setReserveNum(data);
+      }
+      fetchEvent();
+      fetchReserveNum();
     }
-    fetchEvent();
-    fetchReserveNum();
-  }
-  }, []);
-  
+  }, [router]);
+
   const joinEvent = async () => {
     try {
       const response = await fetch(`/api/joinEvent/${event.id}`, {
         method: "POST",
       });
-      
+
       if (response.ok) {
         console.log("joined event.");
       } else {
@@ -77,33 +78,51 @@ export default function Page() {
 
   return (
     <>
-    <div>
-      <h3>日付：{event.start_time}</h3>
-    </div>
-    <div>
-      <h3>イベント名：{event.name}</h3>
-    </div>
-    <div>
-      <h3>ジャンル</h3>
-      {event.technologies.map((tech, index) => (
-        <p key={index}>{tech}</p>
-        ))}
-    </div>
-    <div>
-      <h3>主催者：{event.create_user}</h3>
-    </div>
-    <div>
-      <h3>場所：{event.location}</h3>
-    </div>
-    <div>
-      <h3>最大人数：{event.limitation}</h3>
-    </div>
-    <div>
-      <h3>参加予定人数: {reserveNum.num}</h3>
-    </div>
-    <div>
-      <button onClick={joinEvent}>イベントに参加</button>
-    </div>
+      <div className=".container mt-4 p-4 container-fluid">
+        <div className="pb-3">
+          <h1 className="border-primary border-start border-3 ps-3">イベント詳細確認</h1>
+        </div>
+        <div className="border border-secondary rounded p-4">
+            <div className="row d-flex justify-content-around">
+              <h3 className="col-3 ps-5 ">日付</h3>
+              <h3 className="col-6">{event.start_time}</h3>
+            </div>
+            <div className="row d-flex justify-content-around">
+              <h3 className="col-3 ps-5">イベント名</h3>
+              <h3 className="col-6">{event.name}</h3>
+            </div>
+            <div className="row d-flex justify-content-around">
+              <h3 className="col-3 ps-5">ジャンル</h3>
+              <div className="col-6 mb-2">
+                {event.technologies.map((tech, index) => (
+                  <p className="mb-0" key={index}>{tech}</p>
+                ))}
+              </div>
+            </div>
+            <div className="row d-flex justify-content-around">
+              <h3 className="col-3 ps-5">主催者</h3>
+              <h3 className="col-6">{event.create_user}</h3>
+            </div>
+            <div className="row d-flex justify-content-around">
+              <h3 className="col-3 ps-5">場所</h3>
+              <h3 className="col-6">{event.location}</h3>
+            </div>
+            <div className="row d-flex justify-content-around">
+              <h3 className="col-3 ps-5">定員</h3>
+              <h3 className="col-6">{event.limitation}</h3>
+            </div>
+            <div className="row d-flex justify-content-around">
+              <h3 className="col-3 ps-5">参加予定人数</h3>
+              <h3 className="col-6">{reserveNum.num}</h3>
+            </div>
+          <div className="d-flex justify-content-around">
+            <button className="btn btn-primary btn-lg col-9 mt-4" onClick={joinEvent}>イベントに参加</button>
+          </div>
+        </div>
+        <div className="mt-2">
+          <Link href="/home" className="btn btn-outline-secondary">＜戻る</Link>
+        </div>
+      </div>
     </>
   )
 }

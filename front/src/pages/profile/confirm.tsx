@@ -1,7 +1,7 @@
 import { isset } from '../../utils/isType';
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import { Ability, Profile } from '.';
+import { Technology, Profile } from '.';
 import { GetServerSidePropsContext } from 'next';
 
 /**
@@ -33,10 +33,11 @@ export default function Page() {
     const router = useRouter();
     const [profile, setProfile] = useState<Profile>({
         name: "",
+        email: "",
         department: "",
-        abilities: [{
+        technologies: [{
             name: "",
-            age: ""
+            // age: ""
         }]
     });
 
@@ -77,10 +78,10 @@ export default function Page() {
             <h1>プロフィール</h1>
             <div>名前: {isset(profile.name) ? profile.name : "--"}</div>
             <div>部署: {isset(profile.department) ? profile.department : "--"}</div>
-            <div>保有技術: {isset(profile.abilities) ? profile.abilities.map((v: Ability, i: number) => (
+            <div>保有技術: {isset(profile.technologies) ? profile.technologies.map((v: Technology, i: number) => (
                 <div key={i}>
                     <div>名前: {v.name}</div>
-                    <div>年齢: {v.age}</div>
+                    {/* <div>年齢: {v.age}</div> */}
                 </div>
             )) : "--"}</div>
             <button onClick={() => handleBack()}>戻る</button>

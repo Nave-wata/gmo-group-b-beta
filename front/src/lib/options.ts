@@ -18,35 +18,13 @@ export const options: NextAuthOptions = {
                     prompt: "consent",
                     access_type: "offline",
                     response_type: "code",
-                    scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar",
+                    scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile  https://www.googleapis.com/auth/calendar",
                 },
             },
         }),
     ],
     callbacks: {
         jwt: async ({ token, user, account, profile, isNewUser }) => {
-            async () => {
-                // Google OAuthへの接続
-                const oauth2Client = new google.auth.OAuth2({
-                    clientId: process.env.GOOGLE_CLIENT_ID,
-                    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-                    redirectUri: "http://localhost:3000/api/auth/callback/google",
-                });
-
-                // トークンを設定。refresh_tokenも渡せます。
-                oauth2Client.setCredentials({
-                    access_token: account?.access_token,
-                    refresh_token: account?.refresh_token,
-                    scope: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/calendar.readonly",
-                });
-
-                // Googleカレンダーの一覧を取得する
-                const calendar = google.calendar({ version: "v3", auth: oauth2Client });
-                const calendarResponse = await calendar.calendarList.list();
-
-                writeFileSync("./calendar.json", JSON.stringify(calendarResponse));
-            };
-
             if (user) {
                 token.user = user;
             }
