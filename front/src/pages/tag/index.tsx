@@ -18,7 +18,7 @@ export default function Page() {
         setTag({...tag, "name": value})
     };
 
-    const URL = "http://localhost:40000";
+    const URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:40000";
 
     const submitTagInfo = async () => {
         axios.post(`${URL}/api/tag`,
