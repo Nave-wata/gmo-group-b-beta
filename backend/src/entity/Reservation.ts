@@ -22,7 +22,7 @@ export class Reservation {
         name: 'user_id',
         referencedColumnName: 'id',
     })
-    readonly user?: User;
+     user?: User;
 
     @ManyToOne(() => Event, (event) => event.reservations, {
         createForeignKeyConstraints: false,
@@ -32,7 +32,7 @@ export class Reservation {
         name: 'event_id',
         referencedColumnName: 'id',
     })
-    readonly event?: Event;
+     event?: Event;
 
     @CreateDateColumn({ comment: '登録日時' })
     readonly created_at?: Timestamp;
