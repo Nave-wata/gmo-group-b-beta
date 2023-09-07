@@ -1,9 +1,14 @@
-name: cd
+name: CD
+
 on:
-  push:
-    branches: [main]
+  workflow_run:
+    workflows:
+      - CI
+    types:
+      - completed
+
 jobs:
-  cd:
+  CD:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -17,5 +22,5 @@ jobs:
           script: |
             cd github/gmo-group-b-beta
             git pull origin main
-            docker compose -f compose.production.yaml up --force-recreate --no-deps front
-            docker compose -f compose.production.yaml up --force-recreate --no-deps backend
+            docker compose -f compose.production.yaml up -d --force-recreate --no-deps front
+            docker compose -f compose.production.yaml up -d --force-recreate --no-deps backend

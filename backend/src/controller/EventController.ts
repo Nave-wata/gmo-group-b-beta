@@ -25,7 +25,7 @@ export class EventController {
             end_time: string,
             location: string,
             limitation: number,
-            technologies: number[]
+            technologies: string[]
         }
 
         const {
@@ -59,9 +59,9 @@ export class EventController {
         })*/
 
         let technologyList: Technology[] = []
-        for (const technologyId of technologies) {
+        for (const technologyName of technologies) {
             const technology = await this.technologyRepository.findOneBy({
-                id: technologyId
+                name: technologyName
             })
             if (technology) {
                 technologyList.push(technology)

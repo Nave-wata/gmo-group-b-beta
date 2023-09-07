@@ -162,19 +162,21 @@ export default function Page() {
     new Array<boolean>(tasks.length).fill(false)
   );
 
+  const URL = "http://localhost:40000";
+
   useEffect(() => {
-    axios.get("/api/tasks")
+    axios.get(`${URL}/api/event`)
       .then((res) => res.data)
       .then((data) => setTasks(data))
       .catch((e) => null);
 
-    axios.get("/api/technologies")
+    axios.get(`${URL}/api/tag`)
       .then((res) => res.data)
       .then((data) => setTech(data))
       .catch((e) => null);
 
     tasks.map(async (task: Task) => {
-      axios.get(`/api/event/${task.id}`)
+      axios.get(`${URL}/api/event/${task.id}`)
         .then((res) => res.data)
         .then((data) => setReserveNum(data))
         .catch((e) => null);
@@ -233,8 +235,8 @@ export default function Page() {
                 <p className="mb-5">Event list</p>
               </div>
             </div>
-            <div className="mt-4 mb-1"><Link className="btn btn-warning rounded-pill mt-5 h-45" href="/event/new">＋イベントの作成</Link></div>
-            
+            <Link className="btn btn-warning rounded-pill mt-5" href="/event/new">＋イベントの作成</Link>
+            <Link className="btn btn-warning rounded-pill mt-5" href="/tag">＋タグの作成</Link>
           </div>
         </div>
         <div className="row justify-content-around">

@@ -9,12 +9,12 @@ export const Routes = [{
     action: "createUser"
 }, {
     method: "get",
-    route: "/api/user/:id",
+    route: "/api/user/:token",
     controller: UserController,
     action: "getProfile"
 }, {
     method: "patch",
-    route: "/api/user/:id",
+    route: "/api/user/:token",
     controller: UserController,
     action: "updateProfile"
 }, {
@@ -32,6 +32,11 @@ export const Routes = [{
     route: "/api/tag",
     controller: TechnologyController,
     action: "getTagList"
+}, {
+    method: "post",
+    route: "/api/tag",
+    controller: TechnologyController,
+    action: "createTag"
 }, {
     method: "get",
     route: "/api/event/:id/remaining",

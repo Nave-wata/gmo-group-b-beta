@@ -17,4 +17,19 @@ export class TechnologyController {
 
         return user
     }
+
+    async createTag(request: Request, response: Response, next: NextFunction) {
+        const {name} = request.body;
+        if(!name) {
+            response.status(400).send({message: "Bad Request"});
+            return
+        }
+
+        const technology = new Technology();
+        technology.name = name
+
+        this.technologyRepository.save(technology)
+        response.status(201).send(technology)
+        return
+    }
 }
