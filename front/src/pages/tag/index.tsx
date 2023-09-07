@@ -31,11 +31,11 @@ export default function Page() {
     }
     
     return (
-        <form onClick={submitTagInfo}>
-        <label>
-            <input type="text" value={tag.name} onChange={handleChange}/>
-        </label>
-        <button type="submit">送信</button>
-        </form>
+        <div>
+            <label>
+                <input type="text" value={tag.name} onChange={handleChange}/>
+            </label>
+            <button onClick={submitTagInfo}>送信</button>
+        </div>
     )
 }
