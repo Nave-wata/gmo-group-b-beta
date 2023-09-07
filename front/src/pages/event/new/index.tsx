@@ -97,6 +97,7 @@ export default function Page() {
     return (
         <>
             <div>
+                <form onSubmit={submitEventInfo}>
                 <div className=".container mt-5 container-fluid">
                     <div className="mx-4">
                         <div className="pb-5">
@@ -216,6 +217,7 @@ export default function Page() {
                         </div>
                     </div>
                 </div>
+                </form>
             </div>
             {isChecking && (
                 <Agreement content={"イベントを作成しますか？"}
