@@ -162,7 +162,7 @@ export default function Page() {
     new Array<boolean>(tasks.length).fill(false)
   );
 
-  const URL = "http://localhost:40000";
+  const URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:40000";
 
   useEffect(() => {
     axios.get(`${URL}/api/event`)
