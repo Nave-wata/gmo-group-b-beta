@@ -3,6 +3,7 @@ import bodyParser from "body-parser"
 import { Request, Response } from "express"
 import { AppDataSource } from "./data-source"
 import { Routes } from "./routes"
+import { Reservation } from "./entity/Reservation"
 
 AppDataSource.initialize().then(async () => {
 
@@ -16,6 +17,8 @@ AppDataSource.initialize().then(async () => {
             const result = (new (route.controller as any))[route.action](req, res, next)
             if (result instanceof Promise) {
                 res.setHeader('Access-Control-Allow-Origin', '*')
+                res.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+                res.setHeader("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization")
 
                 result.then(result => result !== null && result !== undefined ? res.send(result) : undefined)
 
@@ -23,6 +26,10 @@ AppDataSource.initialize().then(async () => {
                 res.json(result)
             }
         })
+    })
+
+    app.options('*', (req, res) => {
+        res.sendStatus(200);
     })
 
     // setup express app here
