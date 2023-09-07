@@ -72,5 +72,5 @@ export class Event {
         createForeignKeyConstraints: false,
         persistence: false,
     })
-    event_technologies?: EventTechnology[];
+    readonly event_technologies?: EventTechnology[];
 }

@@ -83,6 +83,7 @@ export class EventController {
         await AppDataSource.manager.save(event);
 
         let eventTechnologyList: EventTechnology[] = []
+
         // technology_eventテーブルに保存
         for (const temp of technologyList) {
             const technologyEvent = new EventTechnology();
@@ -194,10 +195,20 @@ export class EventController {
         event.location = location;
         event.limitation = limitation;
         event.record_url = recordUrl;
-        event.event_technologies = technologyList;
         event.google_calender_event_id = googleCalenderEventId;
-        // technology
 
+        // technology
+        let eventTechnologyList: EventTechnology[] = []
+
+        // technology_eventテーブルに保存
+        for (const temp of technologyList) {
+            const technologyEvent = new EventTechnology();
+            technologyEvent.event = event;
+
+            technologyEvent.technology = temp;
+            eventTechnologyList.push(technologyEvent);
+            await AppDataSource.manager.save(technologyEvent);
+        }
 
         response.status(200).send(event);
         return;
