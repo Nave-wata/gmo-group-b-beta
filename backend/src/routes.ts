@@ -49,7 +49,7 @@ export const Routes = [{
     action: "getEventListByTag"
 },{
     method: "post",
-    route: "/api/event/:event_id/apply/:user_id",
+    route: "/api/event/:event_id/apply/:user_token",
     controller: EventController,
     action: "applyEvent"
 },{
