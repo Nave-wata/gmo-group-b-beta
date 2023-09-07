@@ -3,6 +3,7 @@ import Agreement from "@/components/Agreement";
 import Link from "next/link";
 import ReactLoading from 'react-loading';
 import {recordCalendar} from "@/lib/GoogleCalendarClient/calendarClient";
+import RequiredMark from "@/components/RequiredMark";
 
 type Event = {
     "create_user": string,
@@ -106,6 +107,64 @@ export default function Page() {
         setFormData(newFormData);
     }
 
+    const validate = () => {
+        // 入力がないところをはじく。過去の日付を受け付けないようにする。
+
+        let lackArray = [];
+        let errorArray = [];
+        if (formData.name === "") {
+            lackArray.push("イベント名");
+        }
+        if (formData.technologies.length === 0) {
+            lackArray.push("技術ラベル");
+        }
+        if(formData.location=== ""){
+            lackArray.push("場所");
+        }
+        let isStartDateExist: boolean = false;
+        let isEndDateExist: boolean = false;
+
+
+        if (formData.start_time === "") {
+            lackArray.push("開始時刻");
+        } else {
+            isStartDateExist = true;
+            const startDate = new Date(formData.end_time.replace(' ', 'T'))
+            const currentDate = new Date()
+            if (startDate < currentDate) {
+                errorArray.push("startDateが過去の日付です");
+            }
+        }
+        if (formData.end_time === "") {
+            lackArray.push("終了時刻");
+        } else {
+            isEndDateExist = true;
+            const startDate = new Date(formData.end_time.replace(' ', 'T'))
+            const currentDate = new Date()
+            if (startDate < currentDate) {
+                errorArray.push("endDateが過去の日付です");
+            }
+        }
+
+        if (isStartDateExist && isEndDateExist) {
+            if (formData.start_time > formData.end_time) {
+                errorArray.push("startDateがendDateより後の日付です");
+            }
+        }
+
+        if (lackArray.length > 0) {
+            errorArray.push(lackArray.join(",") + "が入力されていません");
+        }
+        // 問題がないのはエラーの配列に一つも入っていないとき
+        if (errorArray.length > 0) {
+            window.alert(errorArray.join("\n"));
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
 
     return (
         <>
@@ -117,7 +176,7 @@ export default function Page() {
                         </div>
                         <div className="">
                             <label className="form-label d-flex justify-content-around mb-3">
-                                <p className="col-3 ps-3">イベント名</p>
+                                <p className="col-3 ps-3">イベント名<RequiredMark/></p>
                                 <input className="form-control" type="text" name="name" value={formData.name}
                                        onChange={handleChange}
                                        required/>
@@ -128,7 +187,7 @@ export default function Page() {
                             {formData.technologies.map((tech, index) => (
                                 <div key={index} className="">
                                     <label className="form-label d-flex justify-content-around m-2">
-                                        <p className="col-3 ps-2">技術ラベル{index + 1}</p>
+                                        <p className="col-3 ps-2">技術ラベル{index + 1} </p>
                                         <input className="form-control me-1" type="text" name={`technologies[${index}]`}
                                                value={tech}
                                                onChange={(e) => handleTechChange(e, index)} required/>
@@ -140,6 +199,7 @@ export default function Page() {
 
                                 </div>
                             ))}
+                            <RequiredMark/>
                             <div className="d-flex justify-content-around mb-3">
                                 <div className="col-3"></div>
                                 <button className="col-9 btn btn-warning rounded-pill" type="button"
@@ -150,7 +210,7 @@ export default function Page() {
                         <div className=" border-2 border-top">
                             <div className="">
                                 <label className="d-flex justify-content-around my-3">
-                                    <p className="col-3 ps-3">開始時刻</p>
+                                    <p className="col-3 ps-3">開始時刻<RequiredMark/></p>
                                     <input className="form-control" type="datetime-local" name="start_time"
                                            value={formData.start_time}
                                            onChange={handleChange} required/>
@@ -158,7 +218,7 @@ export default function Page() {
                             </div>
                             <div className="">
                                 <label className="d-flex justify-content-around mb-3">
-                                    <p className="col-3 ps-3">終了時刻</p>
+                                    <p className="col-3 ps-3">終了時刻<RequiredMark/></p>
                                     <input className="form-control" type="datetime-local" name="end_time"
                                            value={formData.end_time}
                                            onChange={handleChange} required/>
@@ -167,7 +227,7 @@ export default function Page() {
                             </div>
                             <div className="">
                                 <label className="form-label d-flex justify-content-around mb-3">
-                                    <p className="col-3 ps-3">場所</p>
+                                    <p className="col-3 ps-3">場所<RequiredMark/></p>
                                     <input className="form-control" type="text" name="location"
                                            value={formData.location}
                                            onChange={handleChange} required/>
@@ -207,41 +267,34 @@ export default function Page() {
                                 {/* <label>部署：<input type="text" value={inputValue.department} onChange={(e) => handleDepartmentChange(e)} /></label> */}
 
                             </div>
-
-                            <div className="">
-                                <label className="form-label d-flex mb-3 justify-content-between">
-                                    <p className="col-3 ps-3">record_url</p>
-                                    <input className="form-control" type="text" name="record_url"
-                                           value={formData.record_url}
-                                           onChange={handleChange} required/>
-                                </label>
-
-                            </div>
                         </div>
                         <div className="mb-3 d-flex justify-content-around">
                             <div className="mt-4">
                                 <Link href="/home" className="btn btn-outline-secondary">＜戻る</Link>
                             </div>
                             <button className="btn btn-primary col-9 mt-4" type="submit" onClick={() => {
-                                setIsChecking(true)
+                                const result = validate();
+                                if (result) {
+                                    setIsChecking(true);
+                                }
                             }}>作成
                             </button>
                         </div>
                     </div>
                 </div>
-            {isChecking && (
-                <Agreement content={"イベントを作成しますか？"}
-                           handleOnAgree={async () => {
+                {isChecking && (
+                    <Agreement content={"イベントを作成しますか？"}
+                               handleOnAgree={async () => {
 
-                               setIsLoading(true);
-                               await submitEventInfo();
-                               setIsLoading(false);
+                                   setIsLoading(true);
+                                   await submitEventInfo();
+                                   setIsLoading(false);
 
-                               setIsChecking(false);
-                           }}
-                           handleOnDisagree={() => {
-                               setIsChecking(false);
-                           }}/>)}
+                                   setIsChecking(false);
+                               }}
+                               handleOnDisagree={() => {
+                                   setIsChecking(false);
+                               }}/>)}
 
             </div>
             {isLoading && <ReactLoading type={"spin"} color={"#000000"} height={667} width={375}/>}
