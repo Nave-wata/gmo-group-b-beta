@@ -26,8 +26,12 @@ export default function Page() {
                 "Content-Type": "application/json"
             }
         })
-        .then((res) => console.log(res))
-        .catch((e) => console.error("ERROR",e));
+        .then((res) => {
+            if (process.env.NODE_ENV !== "production") console.log(res)
+        })
+        .catch((e) => {
+            if (process.env.NODE_ENV !== "production") console.error("ERROR",e)
+        });
     }
     
     return (

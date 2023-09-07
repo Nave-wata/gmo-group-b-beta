@@ -57,7 +57,9 @@ export default function Page() {
     axios.get(`${URL}/api/user/${userId}`)
     .then((res) => res.data)
     .then((data) => setInputValue(data))
-    .catch((e) => { console.error("ERROR",e)});
+    .catch((e) => { 
+      if (process.env.NODE_ENV !== "production") console.error("ERROR",e)
+    });
   }, [session?.user])
 
   /**
