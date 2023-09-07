@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  front:
+    image: gmo_intern_alpha:front
+    container_name: gmo_intern_alpha_front
+    build:
+      context: .
+      dockerfile: ./docker/front/Dockerfile
+    volumes:
+      - ./front:/front
+    ports:
+      - 3000:3000
+    tty: true
+    depends_on:
+      - db
+
+  backend:
+    image: gmo_intern_alpha:backend
+    container_name: gmo_intern_alpha_backend
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile
+    volumes:
+      - ./backend:/backend
+    ports:
+      - 40000:40000
+    tty: true
+    depends_on:
+      - db
+
+  db:
+    image: gmo_intern_alpha:db
+    container_name: gmo_intern_alpha_db
+    build:
+      context: .
+      dockerfile: ./docker/mariadb/Dockerfile
+    environment:
+      MARIADB_DATABASE: main
+      MARIADB_ROOT_PASSWORD: rootpass
+    ports:
+      - 3306:3306
+    tty: true
