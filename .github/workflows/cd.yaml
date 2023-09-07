@@ -1,0 +1,21 @@
+name: cd
+on:
+  push:
+    branches: [main]
+jobs:
+  cd:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install SSH Key for Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          key: ${{ secrets.SK }}
+          host: ${{secrets.SSH_HOST}}
+          username: ${{secrets.SSH_USERNAME}}
+          port: ${{secrets.SSH_PORT}}
+          script: |
+            cd github/gmo-group-b-beta
+            git pull origin main
+            docker compose -f compose.production.yaml up --force-recreate --no-deps front
+            docker compose -f compose.production.yaml up --force-recreate --no-deps backend
