@@ -17,17 +17,17 @@ jobs:
       - uses: actions/checkout@v3
       - name: Checkout And Build
         run: docker compose -f compose.test.yaml up -d
-      - name: front npm ci
-        run: docker compose -f compose.test.yaml exec front npm ci
+      - name: front npm install
+        run: docker compose -f compose.test.yaml exec front npm install
       - name: front build
         run: docker compose -f compose.test.yaml exec front npm run build
-      - name: backend npm ci
-        run: docker compose -f compose.test.yaml exec backend npm ci
+      - name: backend npm install
+        run: docker compose -f compose.test.yaml exec backend npm install
       - name: backend build
         run: docker compose -f compose.test.yaml exec backend npm run build
       - name: db connection confirmation
         run: docker compose -f compose.test.yaml exec db ls
-      - name: Approve PR
-        run: gh pr review "$PR_URL" --approve
-      - name: Enable auto-merge for Steward PRs
-        run: gh pr merge --merge --auto "$PR_URL"
+      # - name: Approve PR
+      #   run: gh pr review "$PR_URL" --approve
+      # - name: Enable auto-merge for Steward PRs
+      #   run: gh pr merge --merge --auto "$PR_URL"
