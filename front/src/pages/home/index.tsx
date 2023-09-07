@@ -225,7 +225,7 @@ export default function Page() {
     <>
       <div className=".container mt-4 p-4 container-fluid">
         <div className="">
-          <p>{isset(session) ? session?.user?.name + "さん" : null}</p>
+          {/* <p>{isset(session) ? session?.user?.name + "さん" : null}</p> */}
           <div className="col-9 d-flex justify-content-between">
             <div className="pb-3">
               <h1 className="border-primary border-start border-3 ps-3">イベント一覧</h1>
