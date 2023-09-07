@@ -18,6 +18,7 @@ export const config = {
         "/event/:path*",
         "/home/:path*",
         "/profile/:path*",
+        "/register/:path*",
         "/tag/:path*",
         "/"
     ],
