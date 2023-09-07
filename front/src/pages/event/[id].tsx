@@ -99,9 +99,12 @@ export default function Page() {
     const onCalendarBtnClick = () => {
         console.log("カレンダーに追加する");
 
-
-
-        recordCalendar(event.name,);
+        const convertedStartDate = new Date(event.start_time.replace(' ', 'T'));
+        const convertedEndDate = new Date(event.end_time.replace(' ', 'T'));
+        // Google Calendar APIにアクセス
+        const getCalendarId: string = recordCalendar(event.name, event.location, event.description, convertedStartDate, convertedEndDate);
+        window.alert("追加しました");
+        console.log("Event ID → "+getCalendarId);
     }
 
     return (
@@ -150,7 +153,7 @@ export default function Page() {
                         </div>
                         <div
                             style={{padding: 5, justifyContent: "center", display: "inline-flex", borderRadius: 5, border: "solid 1px black", color: isCalendarBtnHover ? "white" : "gray", backgroundColor: isCalendarBtnHover ? "gray" : "white", position: "absolute", top: 5, right: 5}}
-                            onMouseEnter={handleCalendarBtnEnter} onMouseLeave={handleCalendarBtnLeave}>
+                            onMouseEnter={handleCalendarBtnEnter} onMouseLeave={handleCalendarBtnLeave} onClick={onCalendarBtnClick}>
                             <div style={{display: "inline-block", marginRight: "0.5rem"}}>カレンダーに追加する</div>
                             <div style={{position: "relative", bottom: 3}}>
                                 <CalendarIcon/>
