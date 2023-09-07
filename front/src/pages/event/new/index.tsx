@@ -110,7 +110,6 @@ export default function Page() {
     return (
         <>
             <div>
-                <form onSubmit={submitEventInfo}>
                 <div className=".container mt-5 container-fluid">
                     <div className="mx-4">
                         <div className="pb-5">
@@ -230,8 +229,6 @@ export default function Page() {
                         </div>
                     </div>
                 </div>
-                </form>
-            </div>
             {isChecking && (
                 <Agreement content={"イベントを作成しますか？"}
                            handleOnAgree={async () => {
@@ -246,7 +243,7 @@ export default function Page() {
                                setIsChecking(false);
                            }}/>)}
 
-
+            </div>
             {isLoading && <ReactLoading type={"spin"} color={"#000000"} height={667} width={375}/>}
         </>
     )
