@@ -149,12 +149,21 @@ const dummyTech: Technology[] = [
 
 export default function Page() {
   const { data: session } = useSession();
-  const [tasks, setTasks] = useState<Task[]>(dummyTasks);
+  const [tasks, setTasks] = useState<Task[]>(
+    // 本番環境ではダミーデータを使用しない
+    process.env.NODE_ENV !== "production" ? dummyTasks : []
+  );
 
   // 現在の予約者数を保持するもの
-  const [reserveNum, setReserveNum] = useState<Num[]>(dummyReserveNum);
+  const [reserveNum, setReserveNum] = useState<Num[]>(
+    // 本番環境ではダミーデータを使用しない
+    process.env.NODE_ENV !== "production" ? dummyReserveNum : []
+  );
 
-  const [tech, setTech] = useState<Technology[]>(dummyTech);
+  const [tech, setTech] = useState<Technology[]>(
+    // 本番環境ではダミーデータを使用しない
+    process.env.NODE_ENV !== "production" ? dummyTech : []
+  );
 
   const router = useRouter();
   const [inputTech, setInputTech] = useState<string>("");
