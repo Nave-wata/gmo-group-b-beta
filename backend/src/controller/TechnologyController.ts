@@ -17,18 +17,4 @@ export class TechnologyController {
 
         return user
     }
-
-    async getEventListByTag(request: Request, response: Response, next: NextFunction) {
-        const technology_id = request.params.id
-
-        const technology = await this.technologyRepository.findOne({
-            relations: ['event_technologies', 'event_technologies.technology'],
-            where: {id: Number(technology_id)},
-        });
-        if (technology == null) {
-            return response.status(404).send({message: "Not Found"})
-        }
-
-        return technology.event_technologies
-    }
 }

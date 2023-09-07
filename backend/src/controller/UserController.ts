@@ -52,6 +52,14 @@ export class UserController {
             return
         }
 
+        const find_user = await this.userRepository.findOne({
+            where: { email: email },
+            });
+        if(find_user) {
+            response.status(409).send({message: "Conflict"})
+            return
+        }
+
         const user = new User()
         user.name = name
         user.email = email
@@ -174,5 +182,20 @@ export class UserController {
 
         response.status(200).send(res)
         return
+    }
+
+    async checkUserByMail(request: Request, response: Response, next: NextFunction) {
+        const email: string = request.body.email;
+        if(!email) {
+            response.status(404).send({message: "NotFound"})
+            return
+        }
+        const user = await this.userRepository.findOne({
+            where: { email: email },
+            });
+
+        const user_exist = (user!==null);
+
+        return user_exist
     }
 }

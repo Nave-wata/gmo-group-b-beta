@@ -23,6 +23,11 @@ export const Routes = [{
     controller: UserController,
     action: "getUserApplyingEvent"
 }, {
+    method: "post",
+    route: "/api/user/exist",
+    controller: UserController,
+    action: "checkUserByMail"
+}, {
     method: "get",
     route: "/api/tag",
     controller: TechnologyController,
