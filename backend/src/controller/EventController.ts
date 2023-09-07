@@ -161,14 +161,29 @@ export class EventController {
             return;
         }
 
-        for(const event_technology of event.event_technologies) {
+        for (const event_technology of technologies) {
             await AppDataSource
                 .createQueryBuilder()
                 .delete()
                 .from(EventTechnology)
-                .where("id = :id", {id: event_technology.id})
+                .where("technology_id = :id", {id: event_technology})
                 .execute()
         }
+
+        event.user = await this.userRepository.findOneBy({
+            id: createUserId
+        });
+        event.name = name;
+        event.description = description;
+        event.start_time = new Date(startTime);
+        event.end_time = new Date(endTime);
+        event.location= location;
+        event.limitation = limitation;
+        // technology
+        event.
+
+        event.google_calender_event_id = googleCalenderEventId;
+
 
 
 
