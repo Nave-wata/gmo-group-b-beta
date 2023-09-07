@@ -8,13 +8,12 @@
       "module": "commonjs",
       "moduleResolution": "node",
       "esModuleInterop": true,
-      "outDir": "./build",
+      "outDir": "./dist",
       "emitDecoratorMetadata": true,
       "experimentalDecorators": true,
       "sourceMap": true
    },
    "include": [
-      "./entity/User.ts",
-      "./entity/Event.ts"
+      "src/**/*"
    ],
 }

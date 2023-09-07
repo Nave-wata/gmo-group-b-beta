@@ -26,4 +26,4 @@ USER node
 
 COPY ./backend/package*.json /backend/
 
-CMD ["/bin/bash", "-c", "npm install && npm start"]
+CMD ["/bin/bash", "-c", "sleep 10 && npm install && npm run dev"]
