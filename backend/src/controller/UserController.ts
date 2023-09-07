@@ -5,6 +5,7 @@ import { Technology } from "../entity/Technology"
 import { UserTechnology } from "../entity/UserTechnology"
 import { Event } from "../entity/Event"
 import { Reservation } from "../entity/Reservation"
+import { isThisTypeNode } from "typescript"
 
 export class UserController {
 
@@ -35,6 +36,7 @@ export class UserController {
             id: user.id,
             name: user.name,
             email: user.email,
+            department: user.department,
             technologies: technologies,
             created_at: user.created_at,
             edit_at: user.edit_at
@@ -46,7 +48,7 @@ export class UserController {
     }
 
     async createUser(request: Request, response: Response, next: NextFunction) {
-        const {name, email, department, technologies, token} = request.body
+        const {name, email, department, token, technologies} = request.body
         if (!name || !email || !department || !token) {
             response.status(400).send({message: "Bad Request"})
             return
@@ -65,9 +67,11 @@ export class UserController {
         user.email = email
         user.department = department
         user.token = token
-        technologies.forEach(async (technology) => {
+        await this.userRepository.save(user)
+
+        technologies.forEach(async (technologyName: string) => {
             const find_tech = await this.technologyRepository.findOne({
-                where: { id: parseInt(technology) },
+                where: { name: technologyName },
             });
 
             if(find_tech !== null) {
@@ -79,13 +83,33 @@ export class UserController {
                 user_tech.user = user
                 user_tech.technology = _technology
 
-                this.userTechnologyRepository.save(user_tech)
+                await this.userTechnologyRepository.save(user_tech)
             }
         })
 
-        this.userRepository.save(user)
+        const savedUser: User = await this.userRepository.findOne({
+            relations: ['user_technologies', 'user_technologies.technology'],
+            where: { id: user.id },
+        });
 
-        response.status(201).send(user)
+        const savedTechnologyNames: string[] = new Array()
+        if(savedUser.user_technologies) {
+            savedUser.user_technologies.forEach((user_tech: UserTechnology) => {
+                if(user_tech.technology) {
+                    savedTechnologyNames.push(user_tech.technology.name)
+                }
+            })
+        }
+
+        const res = {
+            name: savedUser.name,
+            email: savedUser.email,
+            department: savedUser.department,
+            token: savedUser.token,
+            technologies: savedTechnologyNames
+        }
+
+        response.status(201).send(res)
         return
     }
 
@@ -119,10 +143,9 @@ export class UserController {
         user.name = name
         user.email = email
         user.department = department
-        user.user_technologies = new Array()
-        technologies.forEach(async (technology: number) => {
+        technologies.forEach(async (technologyName: string) => {
             const find_tech = await this.technologyRepository.findOne({
-                where: { id: technology },
+                where: { name: technologyName },
             });
 
             if(find_tech !== null) {
@@ -134,14 +157,31 @@ export class UserController {
                 user_tech.user = user
                 user_tech.technology = _technology
 
-                this.userTechnologyRepository.save(user_tech)
-                user.user_technologies?.push(user_tech)
+                await this.userTechnologyRepository.save(user_tech)
+            }
+        })
+        await this.userRepository.save(user)
+
+        const updatedUser = await this.userRepository.findOne({
+            relations: ['user_technologies', 'user_technologies.technology'],
+            where: { token: userToken },
+        });
+
+        const updatedTechnologyNames = new Array()
+        updatedUser.user_technologies.forEach((user_tech) => {
+            if(user_tech.technology) {
+                updatedTechnologyNames.push(user_tech.technology.name)
             }
         })
 
-        this.userRepository.save(user)
+        const res = {
+            name: updatedUser.name,
+            email: updatedUser.email,
+            department: updatedUser.department,
+            technologies: updatedTechnologyNames
+        }
 
-        response.status(200).send(user)
+        response.status(200).send(res)
         return
     }
 

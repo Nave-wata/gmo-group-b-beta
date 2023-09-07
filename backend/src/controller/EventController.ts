@@ -290,13 +290,13 @@ export class EventController {
     // made by rei
     async applyEvent(request: Request, response: Response, next: NextFunction) {
         const event_id: number = parseInt(request.params.event_id)
-        const user_id: number = parseInt(request.params.user_id)
+        const user_token: string = request.params.user_token
         const event: Event|null = await this.eventRepository.findOne({
             relations: ['reservations', 'reservations.user'],
             where: { id: event_id },
         });
         const user: User|null = await this.userRepository.findOne({
-            where: { id: user_id },
+            where: { token: user_token },
         });
 
         if(event === undefined || event === null || user == undefined || user === null) {
@@ -307,7 +307,7 @@ export class EventController {
         let is_applied: Boolean = false
         if(event?.reservations !== undefined) {
             event?.reservations.forEach((reservation) => {
-                if(reservation.user !== undefined && reservation.user.id === user_id) {
+                if(reservation.user !== undefined && reservation.user.token === user_token) {
                     is_applied = true
                 }
             });
