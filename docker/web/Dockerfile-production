@@ -1,0 +1,4 @@
+FROM nginx:mainline-alpine
+
+ENV TZ="Asia/Tokyo"
+ENV LANG="ja_JP.UTF-8"
