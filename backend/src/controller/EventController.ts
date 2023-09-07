@@ -170,7 +170,7 @@ export class EventController {
                 .createQueryBuilder()
                 .delete()
                 .from(EventTechnology)
-                .where("technology_id = :id", {id: event_technology})
+                .where("technology_id = :id", {id: event_technology.id})
                 .execute()
         }
 
@@ -209,6 +209,8 @@ export class EventController {
             eventTechnologyList.push(technologyEvent);
             await AppDataSource.manager.save(technologyEvent);
         }
+
+        await this.eventRepository.save(event);
 
         response.status(200).send(event);
         return;
