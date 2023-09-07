@@ -181,7 +181,7 @@ export default function Page() {
         .then((data) => setReserveNum(data))
         .catch((e) => null);
     });
-  }, [tasks]);
+  }, [URL, tasks]);
 
   const handleTechCheck = (index: number) => {
     tasks.map((task: Task) => {

@@ -50,7 +50,7 @@ export default function Page() {
             // age: ""
         }]
     });
-    const URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:40000";
+    const URL = "http://localhost:40000";
     const { data: session } = useSession();
     const user = session?.user as UserEntity;
 
@@ -79,20 +79,18 @@ export default function Page() {
             }
         })
         .then((res) => {
-            if (process.env.NODE_ENV !== "production") console.log(res);
+            console.log(res);
             router.push("/home");
         })
-        .catch((e) => {
-            if (process.env.NODE_ENV !== "production") console.error("ERROR", e)
-        });
+        .catch((e) => console.error("ERROR", e));
     }
 
     /**
      * セッション内にプロフィールがあれば取得する
      */
     useEffect(() => {
-        // const item = sessionStorage.getItem("profile");
-        // if (item) setProfile(JSON.parse(item));
+        const item = sessionStorage.getItem("profile");
+        if (item) setProfile(JSON.parse(item));
     }, []);
 
     /**
@@ -103,18 +101,26 @@ export default function Page() {
     }
 
     return (
-        <div>
-            <h1>プロフィール</h1>
-            <div>名前: {isset(profile.name) ? profile.name : "--"}</div>
-            <div>部署: {isset(profile.department) ? profile.department : "--"}</div>
-            <div>保有技術: {isset(profile.technologies) ? profile.technologies.map((v: Technology, i: number) => (
-                <div key={i}>
-                    <div>名前: {v.name}</div>
-                    {/* <div>年齢: {v.age}</div> */}
+        <div className='.container mt-5 p-4 container-fluid border w-75 rounded'>
+            <h1 className='text-center'>プロフィール</h1>
+            <div className='row d-flex justify-content-around'>
+            <h3 className='col-3 ps-5'>名前:</h3><h3 className='col-6'>{isset(profile.name) ? profile.name : "--"}</h3>
+            </div>
+            <div className='row d-flex justify-content-around'>
+            <h3 className='col-3 ps-5'>部署:</h3><h3 className='col-6'>{isset(profile.department) ? profile.department : "--"}</h3>
+            </div>
+            <div className='row d-flex justify-content-around'>
+                <h3 className='col-3 ps-5'>保有技術:</h3>
+                <div className='col-6'>
+            {isset(profile.technologies) ? profile.technologies.map((v: Technology, i: number) => (
+                <p key={i} className='mb-0'>{v.name}</p>
+                )) : "--"}
                 </div>
-            )) : "--"}</div>
-            <button onClick={() => handleBack()}>戻る</button>
-            <button onClick={() => handleSubmit()}>決定</button>
+            </div>
+            <div className='text-center mt-3'>
+            <button className="btn btn-outline-secondary" onClick={() => handleBack()}>戻る</button>
+            <button className="btn btn-outline-primary mx-5" onClick={() => handleSubmit()}>決定</button>
+            </div>
         </div>
     )
 }
