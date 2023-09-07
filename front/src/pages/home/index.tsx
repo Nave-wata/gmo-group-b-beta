@@ -31,7 +31,7 @@ type User = {
 };
 
 type Num = {
-  "num": number,
+  "remaining": number,
 };
 
 type Technology = {
@@ -96,17 +96,7 @@ const dummyTasks: Task[] = [
   },
 ];
 
-const dummyReserveNum: Num[] = [
-  {
-    "num": 10,
-  },
-  {
-    "num": 15,
-  },
-  {
-    "num": 5,
-  }
-];
+const dummyReserveNum: Num = { "remaining": 5 }
 
 const dummyTech: Technology[] = [
       {
@@ -155,9 +145,9 @@ export default function Page() {
   );
 
   // 現在の予約者数を保持するもの
-  const [reserveNum, setReserveNum] = useState<Num[]>(
+  const [reserveNum, setReserveNum] = useState<Num>(
     // 本番環境ではダミーデータを使用しない
-    process.env.NODE_ENV !== "production" ? dummyReserveNum : []
+    process.env.NODE_ENV !== "production" ? dummyReserveNum : [] as any
   );
 
   const [tech, setTech] = useState<Technology[]>(
@@ -185,7 +175,7 @@ export default function Page() {
       .catch((e) => null);
 
     tasks.map(async (task: Task) => {
-      axios.get(`${URL}/api/event/${task.id}`)
+      axios.get(`${URL}/api/event/${task.id}/remaining`)
         .then((res) => res.data)
         .then((data) => setReserveNum(data))
         .catch((e) => null);
@@ -255,7 +245,7 @@ export default function Page() {
                   <h2>{task.start_time}</h2>
                 </div>
                 <div className="col-3 border-primary border-start pt-3  ps-2">
-                  <h5>参加者 {reserveNum[index].num}/{task.limitation}人</h5>
+                  <h5>参加者 {task.limitation - reserveNum.remaining}/{task.limitation}人</h5>
                   <h5>場所  {task.location}</h5>
                 </div>
               </div>

@@ -12,7 +12,7 @@ export interface Profile {
   email: string;
   department: string;
   token: string;
-  technologies: Technology[];
+  technologies: string[];
 }
 
 /**
@@ -42,9 +42,7 @@ export default function Page() {
     email: "",
     department: "",
     token: "",
-    technologies: [{
-      name: "",
-    }]
+    technologies: []
   });
   const URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:40000";
   const { data: session } = useSession();
@@ -62,9 +60,6 @@ export default function Page() {
     .catch((e) => { 
       if (process.env.NODE_ENV !== "production") {
         console.error("ERROR",e)
-      }
-      if (e.response.status === 404) {
-        router.push("/register");
       }
     });
   }, [URL, session?.user])
@@ -95,7 +90,8 @@ export default function Page() {
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue({
       ...inputValue,
-      email: e.target.value
+      email: e.target.value,
+      token: user.id
     });
   }
 
@@ -106,10 +102,10 @@ export default function Page() {
    */
   const handletechnologiesChange = (e: React.ChangeEvent<HTMLInputElement>, index: number, attribute: string) => {
     const newInputValue = { ...inputValue };
-    newInputValue.technologies[index] = {
-      name: attribute === "name" ? e.target.value : inputValue.technologies[index].name,
+    const techName: any = e.target.value;
+    newInputValue.technologies[index] = techName;
+      // name: attribute === "name" ? e.target.value : inputValue.technologies[index].name,
       // age: attribute === "age" ? e.target.value : inputValue.technologies[index].age
-    }
     setInputValue(newInputValue);
   };
 
@@ -118,14 +114,11 @@ export default function Page() {
    */
   const handleAddTechnology = () => {
     // 入力がない場合は追加しない
-    if (inputValue.technologies[inputValue.technologies.length - 1].name === "") return;
+    if (inputValue.technologies[inputValue.technologies.length - 1] === "") return;
     // if (inputValue.technologies[inputValue.technologies.length - 1].age === "") return;
 
     const newInputValue = { ...inputValue };
-    newInputValue.technologies.push({
-      name: "",
-      // age: ""
-    });
+    newInputValue.technologies.push("");
     setInputValue(newInputValue);
   }
 
@@ -147,10 +140,16 @@ export default function Page() {
     // 入力がない場合は更新しない
     if (inputValue.name === "") return;
     if (inputValue.department === "") return;
-    if (inputValue.technologies.some((ability) => ability.name === "")) return;
-
+    // if (inputValue.technologies.some((ability) => ability.name === "")) return;
+    // console.log(user.id)
+    // const updateInput = {
+    //   ...inputValue,
+    //   "token": user.id,
+    // }
+    // setInputValue(updateInput);
     sessionStorage.setItem("profile", JSON.stringify(inputValue));
-    router.push("/profile/confirm");
+    console.log(JSON.stringify(inputValue))
+    router.push("/register/confirm");
   }
 
   return (
@@ -184,7 +183,7 @@ export default function Page() {
                 {inputValue.technologies.map((ability, index) => (
                   <div key={index}>
                     <label className="form-label d-flex justify-content-around mb-2">
-                      <input className="form-control me-1" type="text" value={ability.name} onChange={(e) => handletechnologiesChange(e, index, "name")} />
+                      <input className="form-control me-1" type="text" value={ability} onChange={(e) => handletechnologiesChange(e, index, "name")} />
 
                       {/* <label>年数：<input type="text" value={ability.age} onChange={(e) => handletechnologiesChange(e, index, "age")} /></label> */}
                       <button className="col-3 btn btn-secondary" onClick={() => handleDeleteTechnology(index)}>削除</button>
