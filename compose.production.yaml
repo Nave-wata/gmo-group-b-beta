@@ -83,8 +83,8 @@ services:
   #     - ./docker/certbot/certbot-var:/var/lib/letsencrypt
   #   depends_on:
   #     - web 
-  #   # command: certonly --webroot --webroot-path=/var/www/html --email ubuntu@gmo-b.takayaman2180.net --agree-tos --no-eff-email --staging -d gmo-b.takayaman2180.net
-  #   command: certonly --webroot --webroot-path=/var/www/html --email ubuntu@gmo-b.takayaman2180.net --agree-tos --no-eff-email --force-renewal -d gmo-b.takayaman2180.net
+  #   # command: certonly --webroot --webroot-path=/var/www/html --email ubuntu@gmo-b-beta.takayaman2180.net --agree-tos --no-eff-email --staging -d gmo-b-beta.takayaman2180.net
+  #   command: certonly --webroot --webroot-path=/var/www/html --email ubuntu@gmo-b-beta.takayaman2180.net --agree-tos --no-eff-email --force-renewal -d gmo-b-beta.takayaman2180.net
 
 volumes:
   certbot-etc:
@@ -93,13 +93,13 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/ubuntu/github/gmo-group-b-alpha/
+      device: /home/ubuntu/github/gmo-group-b-beta/
       o: bind
   dhparam:
     driver: local
     driver_opts:
       type: none
-      device: /home/ubuntu/github/gmo-group-b-alpha/dhparam/
+      device: /home/ubuntu/github/gmo-group-b-beta/dhparam/
       o: bind
 
 networks:
