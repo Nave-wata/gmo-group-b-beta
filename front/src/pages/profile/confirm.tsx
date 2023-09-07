@@ -79,10 +79,12 @@ export default function Page() {
             }
         })
         .then((res) => {
-            console.log(res);
+            if (process.env.NODE_ENV !== "production") console.log(res);
             router.push("/home");
         })
-        .catch((e) => console.error("ERROR", e));
+        .catch((e) => {
+            if (process.env.NODE_ENV !== "production") console.error("ERROR", e)
+        });
     }
 
     /**

@@ -87,24 +87,24 @@ export default function Page() {
             });
 
             if (response.ok) {
-                console.log("joined event.");
+                if (process.env.NODE_ENV !== "production") console.log("joined event.");
             } else {
-                console.log("cannot join event.")
+                if (process.env.NODE_ENV !== "production") console.log("cannot join event.")
             }
         } catch (error) {
-            console.error("Error", error);
+            if (process.env.NODE_ENV !== "production") console.error("Error", error);
         }
     }
 
     const onCalendarBtnClick = () => {
-        console.log("カレンダーに追加する");
+        if (process.env.NODE_ENV !== "production") console.log("カレンダーに追加する");
 
         const convertedStartDate = new Date(event.start_time.replace(' ', 'T'));
         const convertedEndDate = new Date(event.end_time.replace(' ', 'T'));
         // Google Calendar APIにアクセス
         const getCalendarId: string = recordCalendar(event.name, event.location, event.description, convertedStartDate, convertedEndDate);
         window.alert("追加しました");
-        console.log("Event ID → "+getCalendarId);
+        if (process.env.NODE_ENV !== "production") console.log("Event ID → "+getCalendarId);
     }
 
     return (

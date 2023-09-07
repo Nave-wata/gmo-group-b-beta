@@ -214,7 +214,7 @@ export default function Page() {
           }
         });
       });
-      console.log(newState);
+      if (process.env.NODE_ENV !== "production") console.log(newState);
         return newState;
     });
   }

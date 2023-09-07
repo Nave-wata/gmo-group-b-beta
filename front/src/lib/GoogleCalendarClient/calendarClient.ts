@@ -34,13 +34,13 @@ export function recordCalendar(summary: string, location: string, description: s
     )
         .then((res) => {
             // debug
-            console.log(res.data) // 上のイベント例がレスポンス;
+            if (process.env.NODE_ENV !== "production") console.log(res.data) // 上のイベント例がレスポンス;
 
             const responseObject = JSON.parse(res.data);
             result = responseObject.id;
         })
         .catch((err) => {
-            console.log(err);
+            if (process.env.NODE_ENV !== "production") console.log(err);
         });
 
     return result;

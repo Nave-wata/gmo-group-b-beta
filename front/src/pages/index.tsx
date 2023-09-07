@@ -34,10 +34,10 @@ const Login: NextPage = () => {
             }
         )
             .then((res) => {
-                console.log(res.data) // 上のイベント例がレスポンス;
+                if (process.env.NODE_ENV !== "production") console.log(res.data) // 上のイベント例がレスポンス;
             })
             .catch((err) => {
-                console.log(err);
+                if (process.env.NODE_ENV !== "production") console.log(err);
             });
     }
 

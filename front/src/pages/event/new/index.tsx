@@ -72,7 +72,7 @@ export default function Page() {
 
         if (getCalendarId === "") {
             // カレンダーの作成に失敗した場合
-            console.log("Failed to create calendar.")
+            if (process.env.NODE_ENV !== "production") console.log("Failed to create calendar.")
         }
 
 
@@ -86,13 +86,13 @@ export default function Page() {
             });
 
             if (response.ok) {
-                console.log("form data is submitted.");
+                if (process.env.NODE_ENV !== "production") console.log("form data is submitted.");
             } else {
-                console.log("form data is not submitted")
-                console.log(formData);
+                if (process.env.NODE_ENV !== "production") console.log("form data is not submitted")
+                if (process.env.NODE_ENV !== "production") console.log(formData);
             }
         } catch (error) {
-            console.error("Error", error);
+            if (process.env.NODE_ENV !== "production") console.error("Error", error);
         }
     };
 
