@@ -1,10 +1,12 @@
-name: cd
+name: CD
+
 on:
   push:
     branches: 
-      - "main"
+      - main
+
 jobs:
-  cd:
+  CD:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
