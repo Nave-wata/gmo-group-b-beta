@@ -2,6 +2,7 @@ import React, {useState} from "react";
 import Agreement from "@/components/Agreement";
 import Link from "next/link";
 import ReactLoading from 'react-loading';
+import {recordCalendar} from "@/lib/GoogleCalendarClient/calendarClient";
 
 type Event = {
     "create_user": string,
@@ -63,6 +64,18 @@ export default function Page() {
             "create_user": "Taro",
         };
         setFormData(updatedForm);
+
+        const convertedStartDate = new Date(formData.start_time.replace(' ', 'T'));
+        const convertedEndDate = new Date(formData.end_time.replace(' ', 'T'));
+        // Google Calendar APIにアクセス
+        const getCalendarId: string = recordCalendar(formData.name, formData.location, formData.description, convertedStartDate, convertedEndDate);
+
+        if (getCalendarId === "") {
+            // カレンダーの作成に失敗した場合
+            console.log("Failed to create calendar.")
+        }
+
+
         try {
             const response = await fetch("api/createEvent", {
                 method: "POST",
