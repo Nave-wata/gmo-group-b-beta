@@ -13,7 +13,7 @@ export default function Page() {
         "name": ""
     });
 
-    const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
         setTag({...tag, "name": value})
     };
