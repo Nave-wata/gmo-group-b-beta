@@ -18,7 +18,7 @@ export class EventController {
 
     async createEvent(request: Request, response: Response, next: NextFunction) {
         type RequestBodyType = {
-            create_user: number,
+            create_user: string,
             name: string,
             description: string,
             start_time: string,
@@ -29,7 +29,7 @@ export class EventController {
         }
 
         const {
-            create_user: createUserId,
+            create_user: createUserToken,
             name: name,
             description: description,
             limitation: limitation,
@@ -39,15 +39,15 @@ export class EventController {
             technologies: technologies
         }: RequestBodyType = request.body;
 
-        if (!createUserId || !name || !startTime || !endTime || !location || !technologies) {
-            return JSON.stringify({message: "lack data" + createUserId + name + startTime + endTime + location + technologies})
+        if (!createUserToken || !name || !startTime || !endTime || !location || !technologies) {
+            return JSON.stringify({message: "lack data" + createUserToken + name + startTime + endTime + location + technologies})
         }
 
         const createUser = await this.userRepository.findOneBy({
-            id: createUserId
+            token: createUserToken
         })
         if (!createUser) {
-            return JSON.stringify({message: "Specified User ID \"" + createUserId + "\" does not exist"})
+            return JSON.stringify({message: "Specified User ID \"" + createUserToken + "\" does not exist"})
         }
 
         /*let technologyList: Technology[] = []
