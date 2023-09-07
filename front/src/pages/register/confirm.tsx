@@ -24,7 +24,7 @@ export function getServerSideProps(context: GetServerSidePropsContext) {
     const referer = context.req.headers.referer ?? "";
 
     // プロフィールページ以外からのアクセスは不可
-    if (referer.match(/profile$/g) === null) {
+    if (referer.match(/register$/g) === null) {
         return {
             notFound: true
         }
@@ -46,12 +46,9 @@ export default function Page() {
         email: "",
         department: "",
         token: "",
-        technologies: [{
-            name: "",
-            // age: ""
-        }]
+        technologies: [""]
     });
-    const URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:40000";
+    const URL = "http://localhost:40000";
     const { data: session } = useSession();
     const user = session?.user as UserEntity;
 
@@ -71,13 +68,13 @@ export default function Page() {
         const updateProfile = {
             ...profile,
             "token": user.id,
-        };
+        }
         setProfile(updateProfile);
-
+        console.log(profile.token)
         sessionStorage.removeItem("profile");
         // console.log(profile);
         const userId = user.id;
-        axios.patch(`${URL}/api/user/${userId}`,
+        axios.post(`${URL}/api/user/`,
         profile,
         {
             headers: {
@@ -119,8 +116,8 @@ export default function Page() {
             <div className='row d-flex justify-content-around'>
                 <h3 className='col-3 ps-5'>保有技術:</h3>
                 <div className='col-6'>
-            {isset(profile.technologies) ? profile.technologies.map((v: Technology, i: number) => (
-                <p key={i} className='mb-0'>{v.name}</p>
+            {isset(profile.technologies) ? profile.technologies.map((v: string, i: number) => (
+                <p key={i} className='mb-0'>{v}</p>
                 )) : "--"}
                 </div>
             </div>

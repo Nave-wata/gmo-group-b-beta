@@ -1,9 +1,10 @@
-import React, {useState} from "react";
+import React, {use, useEffect, useState} from "react";
 import Agreement from "@/components/Agreement";
 import Link from "next/link";
 import ReactLoading from 'react-loading';
 import {recordCalendar} from "@/lib/GoogleCalendarClient/calendarClient";
 import RequiredMark from "@/components/RequiredMark";
+import { useSession } from "next-auth/react";
 
 type Event = {
     "create_user": string,
@@ -14,25 +15,30 @@ type Event = {
     "location": string,
     "description": string,
     "limitation": number,
-    "record_url": string,
-}
+};
+
+type UserEntity = {
+    "id": string,
+    "email": string,
+    "accessToken": string,
+    "refreshToken": string,
+};
 
 export default function Page() {
     const [isChecking, setIsChecking] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [formData, setFormData] = useState<Event>({
-        "create_user": "Taro",
+        "create_user": "1",
         "name": "Vue.js勉強会",
         "technologies": [
             "フロントエンド",
             "Vue.js",
         ],
-        "start_time": "2022-02-02 17:00",
-        "end_time": "2022-02-02 19:00",
+        "start_time": "2024-02-02 17:00",
+        "end_time": "2024-02-02 19:00",
         "location": "オンライン",
         "description": "Let's study Vue.js!!!",
         "limitation": 20,
-        "record_url": "hoge.google.com?hogehogehoge",
     });
     //   const [formData, setFormData] = useState<Event>({
     //   "create_user": "",
@@ -45,26 +51,30 @@ export default function Page() {
     //   "limitation": 0,
     //   "record_url": "",
     // });
-
+    const URL = "http://localhost:40000";
+    const { data: session } = useSession();
+    
+    useEffect(() => {
+        const user = session?.user as UserEntity;
+       const userId = user.id;
+    setFormData({
+        ...formData,
+        create_user: user.id
+    })
+   },[session?.user]) 
+    
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         const {name, value} = e.target;
         setFormData({...formData, [name]: value})
     };
-
+    
     const handleTechChange = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         const newTech = [...formData.technologies]
         newTech[index] = e.target.value;
-        setFormData({...formData, technologies: newTech})
+        setFormData({...formData, technologies: newTech })
     };
 
     const submitEventInfo = async () => {
-
-
-        const updatedForm = {
-            ...formData,
-            "create_user": "Taro",
-        };
-        setFormData(updatedForm);
 
         const convertedStartDate = new Date(formData.start_time.replace(' ', 'T'));
         const convertedEndDate = new Date(formData.end_time.replace(' ', 'T'));
@@ -75,20 +85,20 @@ export default function Page() {
             // カレンダーの作成に失敗した場合
             if (process.env.NODE_ENV !== "production") console.log("Failed to create calendar.")
         }
-
-
         try {
-            const response = await fetch("api/createEvent", {
+            const response = await fetch(`${URL}/api/event`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Accept": "application/json"
                 },
                 body: JSON.stringify(formData),
             });
-
+            console.log(JSON.stringify(formData));
             if (response.ok) {
-                if (process.env.NODE_ENV !== "production") console.log("form data is submitted.");
+                if (process.env.NODE_ENV !== "production") console.log(response);
             } else {
+                console.log("jdaslkfjlpads");
                 if (process.env.NODE_ENV !== "production") console.log("form data is not submitted")
                 if (process.env.NODE_ENV !== "production") console.log(formData);
             }
