@@ -33,6 +33,11 @@ export const Routes = [{
     controller: TechnologyController,
     action: "getTagList"
 }, {
+    method: "post",
+    route: "/api/tag",
+    controller: TechnologyController,
+    action: "createTag"
+}, {
     method: "get",
     route: "/api/event/:id/remaining",
     controller: EventController,
