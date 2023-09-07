@@ -36,13 +36,13 @@ export default function Page() {
     return (
         <>
         <Link href="/home" className="mx-3 mt-3 btn btn-outline-secondary">＜戻る</Link>
-        <form onClick={submitTagInfo}>
+        <div>
         <label className="form-label d-flex justify-content-aroud m-2">
             <p className="col-1 pt-2">新しいタグ</p>
             <input className="form-control me-1" type="text" value={tag.name} onChange={handleChange}/>
-            <button className="btn btn-primary col-3" type="submit">送信</button>
+            <button className="btn btn-primary col-3" onClick={submitTagInfo}>送信</button>
         </label>
-        </form>
+        </div>
         </>
     )
 }
