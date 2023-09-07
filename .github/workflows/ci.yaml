@@ -18,13 +18,13 @@ jobs:
       - name: Checkout And Build
         run: docker compose -f compose.test.yaml up -d
       - name: front npm install
-        run: docker compose -f compose.test.yaml exec front npm install
+        run: docker compose -f compose.test.yaml exec front sudo npm install
       - name: front build
-        run: docker compose -f compose.test.yaml exec front npm run build
+        run: docker compose -f compose.test.yaml exec front sudo npm run build
       - name: backend npm install
-        run: docker compose -f compose.test.yaml exec backend npm install
+        run: docker compose -f compose.test.yaml exec backend sudo npm install
       - name: backend build
-        run: docker compose -f compose.test.yaml exec backend npm run build
+        run: docker compose -f compose.test.yaml exec backend sudo npm run build
       - name: db connection confirmation
         run: docker compose -f compose.test.yaml exec db ls
       # - name: Approve PR
