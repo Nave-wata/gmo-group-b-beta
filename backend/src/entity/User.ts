@@ -24,6 +24,9 @@ export class User {
     @Column('varchar', { length: 256, comment: '部署' })
     department: string;
 
+    @Column('varchar', { length: 1024, comment: 'ユーザートークン' })
+    token: string;
+
     @CreateDateColumn({ comment: '登録日時' })
     readonly created_at?: Timestamp;
 

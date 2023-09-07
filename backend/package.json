@@ -18,13 +18,14 @@
       "express": "^4.17.2",
       "mysql": "^2.14.1",
       "reflect-metadata": "^0.1.13",
-      "typeorm": "0.3.17"
+      "typeorm": "^0.3.17"
    },
    "scripts": {
       "dev": "ts-node-dev --respawn src/index.ts",
       "clean": "rimraf dist",
       "tsc": "tsc",
       "build": "npm-run-all clean tsc",
-      "start": "node ."
+      "start": "node .",
+      "typeorm": "typeorm-ts-node-commonjs"
    }
 }
