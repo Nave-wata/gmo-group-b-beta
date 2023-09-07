@@ -14,5 +14,11 @@ export default withAuth({
 });
 
 export const config = {
-    matcher: ["/event/:path*", "/home:path*", "/profile/:path*", "/"],
+    matcher: [
+        "/event/:path*",
+        "/home/:path*",
+        "/profile/:path*",
+        "/tag/:path*",
+        "/"
+    ],
 };
