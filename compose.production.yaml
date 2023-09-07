@@ -14,9 +14,12 @@ services:
     volumes:
       - ./docker/web/web-root:/var/www/html
       - ./docker/web/conf.d/gmo.conf:/etc/nginx/conf.d/gmo.conf
+      - ./docker/web/conf.d/gmo2.conf:/etc/nginx/conf.d/gmo2.conf
       - ./docker/certbot/certbot-etc:/etc/letsencrypt
       - ./docker/certbot/certbot-var:/var/lib/letsencrypt
+      - ./docker/certbot/back/certbot-etc:/etc/letsencrypt2
       - ./dhparam:/etc/ssl/certs
+      - ./dhparam-back:/etc/ssl/certs2
     depends_on:
       - front
       - backend
@@ -46,8 +49,8 @@ services:
       dockerfile: ./docker/backend/Dockerfile-production
     volumes:
       - ./backend:/backend
-    ports:
-      - 40000:40000
+#    ports:
+#      - 40000:40000
     tty: true
     restart: unless-stopped
     networks:
