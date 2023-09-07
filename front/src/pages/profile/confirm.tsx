@@ -3,6 +3,16 @@ import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
 import { Technology, Profile } from '.';
 import { GetServerSidePropsContext } from 'next';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
+// import { UserEntity } from '@/types';
+
+type UserEntity = {
+    "id": string,
+    "email": string,
+    "accessToken": string,
+    "refreshToken": string,
+};
 
 /**
  * サーバサイドの処理
@@ -40,6 +50,9 @@ export default function Page() {
             // age: ""
         }]
     });
+    const URL = "http://localhost:40000";
+    const { data: session } = useSession();
+    const user = session?.user as UserEntity;
 
     /**
      * 戻るボタンのクリックイベント
@@ -55,15 +68,29 @@ export default function Page() {
      */
     const handleSubmit = () => {
         sessionStorage.removeItem("profile");
-        console.log(profile);
+        // console.log(profile);
+        const userId = user.id;
+        axios.patch(`${URL}/api/user/${userId}`,
+        profile,
+        {
+            headers: {
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        })
+        .then((res) => {
+            console.log(res);
+            router.push("/home");
+        })
+        .catch((e) => console.error("ERROR", e));
     }
 
     /**
      * セッション内にプロフィールがあれば取得する
      */
     useEffect(() => {
-        const item = sessionStorage.getItem("profile");
-        if (item) setProfile(JSON.parse(item));
+        // const item = sessionStorage.getItem("profile");
+        // if (item) setProfile(JSON.parse(item));
     }, []);
 
     /**

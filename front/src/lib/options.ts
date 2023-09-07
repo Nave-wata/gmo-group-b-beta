@@ -3,6 +3,13 @@ import { google } from "googleapis";
 import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 
+type UserEntity = {
+    "id": string,
+    "email": string,
+    "accessToken": string,
+    "refreshToken": string,
+};
+
 export const options: NextAuthOptions = {
     debug: true,
     session: {
@@ -32,10 +39,11 @@ export const options: NextAuthOptions = {
                 token.accessToken = account.access_token;
                 token.refreshToken = account.refresh_token;
             }
-
+            
             return token;
         },
         session: ({ session, token }) => {
+            const user2 = token.user as UserEntity;
             token.accessToken;
             return {
                 ...session,
@@ -44,6 +52,7 @@ export const options: NextAuthOptions = {
                     role: token.role,
                     accessToken: token.accessToken,
                     refreshToken: token.refreshToken,
+                    id: user2.id,
                 },
             };
         },

@@ -1,6 +1,8 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import axios from "axios";
 
 /**
  * 以下のようなプロフィールを作成する
@@ -20,6 +22,13 @@ export interface Technology {
   // age: string;
 }
 
+type UserEntity = {
+    "id": string,
+    "email": string,
+    "accessToken": string,
+    "refreshToken": string,
+};
+
 /**
  * プロフィールページ
  * 
@@ -35,12 +44,21 @@ export default function Page() {
       name: "",
     }]
   });
-
+  const URL = "http://localhost:40000";
+  const { data: session } = useSession();
+  const user = session?.user as UserEntity;
+  
   // セッション内にプロフィールがあれば取得する
   useEffect(() => {
-    const item = sessionStorage.getItem("profile");
-    if (item) setInputValue(JSON.parse(item));
-  }, [])
+    // const item = sessionStorage.getItem("profile");
+    // if (item) setInputValue(JSON.parse(item));
+    const userId = user.id; 
+    if (!userId) return;
+    axios.get(`${URL}/api/user/${userId}`)
+    .then((res) => res.data)
+    .then((data) => setInputValue(data))
+    .catch((e) => { console.error("ERROR",e)});
+  }, [session?.user])
 
   /**
    * @param e 名前入力欄の変更イベント 

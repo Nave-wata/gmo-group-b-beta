@@ -2,6 +2,7 @@ export interface UserEntity {
     email: string;
     accessToken: string;
     refreshToken: string;
+    id: string;
 }
 
 export interface EventEntity {
