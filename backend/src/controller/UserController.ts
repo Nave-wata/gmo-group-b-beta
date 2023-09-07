@@ -14,10 +14,10 @@ export class UserController {
     private eventRepository = AppDataSource.getRepository(Event)
 
     async getProfile(request: Request, response: Response, next: NextFunction) {
-        const user_id = parseInt(request.params.id)
+        const userToken = request.params.token
         const user = await this.userRepository.findOne({
             relations: ['user_technologies', 'user_technologies.technology'],
-            where: { id: user_id },
+            where: { token: userToken },
         });
         if(!user) {
             response.status(404).send({message: "Not Found"})
@@ -46,8 +46,8 @@ export class UserController {
     }
 
     async createUser(request: Request, response: Response, next: NextFunction) {
-        const {name, email, department, technologies} = request.body
-        if (!name || !email || !department) {
+        const {name, email, department, technologies, token} = request.body
+        if (!name || !email || !department || !token) {
             response.status(400).send({message: "Bad Request"})
             return
         }
@@ -64,6 +64,7 @@ export class UserController {
         user.name = name
         user.email = email
         user.department = department
+        user.token = token
         technologies.forEach(async (technology) => {
             const find_tech = await this.technologyRepository.findOne({
                 where: { id: parseInt(technology) },
@@ -89,7 +90,7 @@ export class UserController {
     }
 
     async updateProfile(request: Request, response: Response, next: NextFunction) {
-        const user_id = parseInt(request.params.id)
+        const userToken = request.params.token
         const {name, email, department, technologies} = request.body
         if (!name || !email || !department) {
             response.status(400).send({message: "Bad Request"})
@@ -98,10 +99,10 @@ export class UserController {
 
         const user = await this.userRepository.findOne({
             relations: ['user_technologies', 'user_technologies.technology'],
-            where: { id: user_id },
+            where: { token: userToken },
         });
 
-        if (user === null) {
+        if (!user) {
             response.status(404).send({message: "Not Found"})
             return
         }
