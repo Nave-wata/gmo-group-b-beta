@@ -1,7 +1,4 @@
 import React, {useState} from "react";
-import Agreement from "@/components/Agreement";
-import Link from "next/link";
-import ReactLoading from 'react-loading';
 import axios from "axios";
 
 type Tag = {
@@ -18,7 +15,7 @@ export default function Page() {
         setTag({...tag, "name": value})
     };
 
-    const URL = "http://localhost:40000";
+    const URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:40000";
 
     const submitTagInfo = async () => {
         axios.post(`${URL}/api/tag`,
