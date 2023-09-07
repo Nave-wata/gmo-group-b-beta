@@ -1,0 +1,107 @@
+version: '3'
+
+services:
+  web:
+    image: gmo_intern_alpha:web
+    container_name: gmo_intern_alpha_web
+    build:
+      context: .
+      dockerfile: ./docker/web/Dockerfile-production
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/web/web-root:/var/www/html
+      - ./docker/web/conf.d/gmo.conf:/etc/nginx/conf.d/gmo.conf
+      - ./docker/certbot/certbot-etc:/etc/letsencrypt
+      - ./docker/certbot/certbot-var:/var/lib/letsencrypt
+      - ./dhparam:/etc/ssl/certs
+    depends_on:
+      - front
+      - backend
+    networks:
+      - app-network
+
+  front:
+    image: gmo_intern_alpha:front
+    container_name: gmo_intern_alpha_front
+    build:
+      context: .
+      dockerfile: ./docker/front/Dockerfile-production
+    volumes:
+      - ./front:/front
+    tty: true
+    restart: unless-stopped
+    networks:
+      - app-network
+    depends_on:
+      - db
+
+  backend:
+    image: gmo_intern_alpha:backend
+    container_name: gmo_intern_alpha_backend
+    build:
+      context: .
+      dockerfile: ./docker/backend/Dockerfile-production
+    volumes:
+      - ./backend:/backend
+    ports:
+      - 40000:40000
+    tty: true
+    restart: unless-stopped
+    networks:
+      - app-network
+    depends_on:
+      - db
+
+  db:
+    image: gmo_intern_alpha:db
+    container_name: gmo_intern_alpha_db
+    build:
+      context: .
+      dockerfile: ./docker/mariadb/Dockerfile-production
+    environment:
+      MARIADB_DATABASE: main
+      MARIADB_ROOT_PASSWORD: rootpass
+    ports:
+      - 3306:3306
+    tty: true
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # certbot:
+  #   image: gmo_intern_alpha:certbot
+  #   container_name: gmo_intern_alpha_certbot
+  #   build:
+  #     context: .
+  #     dockerfile: ./docker/certbot/Dockerfile-production
+  #   volumes:
+  #     - ./docker/web/web-root:/var/www/html
+  #     - ./docker/certbot/certbot-etc:/etc/letsencrypt
+  #     - ./docker/certbot/certbot-var:/var/lib/letsencrypt
+  #   depends_on:
+  #     - web 
+  #   # command: certonly --webroot --webroot-path=/var/www/html --email ubuntu@gmo-b.takayaman2180.net --agree-tos --no-eff-email --staging -d gmo-b.takayaman2180.net
+  #   command: certonly --webroot --webroot-path=/var/www/html --email ubuntu@gmo-b.takayaman2180.net --agree-tos --no-eff-email --force-renewal -d gmo-b.takayaman2180.net
+
+volumes:
+  certbot-etc:
+  certbot-var:
+  web-root:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ubuntu/github/gmo-group-b-alpha/
+      o: bind
+  dhparam:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/ubuntu/github/gmo-group-b-alpha/dhparam/
+      o: bind
+
+networks:
+  app-network:
+    driver: bridge
