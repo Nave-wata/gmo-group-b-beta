@@ -78,10 +78,13 @@ export default function Page() {
 
   return (
     <>
-      <div className=".container mt-5 p-4 container-fluid">
-        <div className="mx-4">
+      <div className=".container mt-4 p-3 container-fluid">
+        <div className="mx-2">
           <div className="pb-3">
-            <h1 className="border-primary border-start border-3 ps-3">イベント詳細確認</h1>
+            <div className="border-primary border-start border-3 ps-3">
+              <h1 className="m-0">イベント詳細確認</h1>
+              <p className="mb-5">Event details</p>
+            </div>
           </div>
           <div className="border border-secondary rounded p-4">
             <div className="row d-flex justify-content-around">
@@ -116,12 +119,12 @@ export default function Page() {
               <h3 className="col-3 ps-5">参加予定人数</h3>
               <h3 className="col-6">{reserveNum.num}</h3>
             </div>
-            <div className="d-flex justify-content-around">
-              <button className="btn btn-primary btn-lg col-9 mt-4" onClick={joinEvent}>イベントに参加</button>
+            <div className="mt-4 mb-2 d-flex justify-content-around">
+              <div className="mt-4 col-6 me-1">
+                <Link href="/home" className="col-12 btn btn-outline-secondary">＜ 戻る</Link>
+              </div>
+              <button className="btn btn-primary col-6 mt-4" onClick={joinEvent}>イベントに参加</button>
             </div>
-          </div>
-          <div className="mt-2">
-            <Link href="/home" className="btn btn-outline-secondary">＜戻る</Link>
           </div>
         </div>
       </div>

@@ -109,42 +109,42 @@ const dummyReserveNum: Num[] = [
 ];
 
 const dummyTech: Technology[] = [
-      {
-      "id": 1,
-      "name": "フロントエンド",
-      "created_at": "2020-10-10 10:00:00",
-      "edited_at": "2020-11-11 11:00:00",
-    },
-    {
-      "id": 2,
-      "name": "バックエンド",
-      "created_at": "2020-10-10 10:00:00",
-      "edited_at": "2020-11-11 11:00:00",
-    },
-    {
-      "id": 3,
-      "name": "Vue.js",
-      "created_at": "2020-10-10 10:00:00",
-      "edited_at": "2020-11-11 11:00:00",
-    },
-    {
-      "id": 4,
-      "name": "React.js",
-      "created_at": "2020-10-10 10:00:00",
-      "edited_at": "2020-11-11 11:00:00",
-    },
-    {
-      "id": 5,
-      "name": "Next.js",
-      "created_at": "2020-10-10 10:00:00",
-      "edited_at": "2020-11-11 11:00:00",
-    },
-    {
-      "id": 6,
-      "name": "Python",
-      "created_at": "2020-10-10 10:00:00",
-      "edited_at": "2020-11-11 11:00:00",
-    },
+  {
+    "id": 1,
+    "name": "フロントエンド",
+    "created_at": "2020-10-10 10:00:00",
+    "edited_at": "2020-11-11 11:00:00",
+  },
+  {
+    "id": 2,
+    "name": "バックエンド",
+    "created_at": "2020-10-10 10:00:00",
+    "edited_at": "2020-11-11 11:00:00",
+  },
+  {
+    "id": 3,
+    "name": "Vue.js",
+    "created_at": "2020-10-10 10:00:00",
+    "edited_at": "2020-11-11 11:00:00",
+  },
+  {
+    "id": 4,
+    "name": "React.js",
+    "created_at": "2020-10-10 10:00:00",
+    "edited_at": "2020-11-11 11:00:00",
+  },
+  {
+    "id": 5,
+    "name": "Next.js",
+    "created_at": "2020-10-10 10:00:00",
+    "edited_at": "2020-11-11 11:00:00",
+  },
+  {
+    "id": 6,
+    "name": "Python",
+    "created_at": "2020-10-10 10:00:00",
+    "edited_at": "2020-11-11 11:00:00",
+  },
 ];
 
 export default function Page() {
@@ -213,10 +213,10 @@ export default function Page() {
         });
       });
       console.log(newState);
-        return newState;
+      return newState;
     });
   }
-  
+
 
   const details = async (id: number) => {
     router.push(`/event/${id}`);
@@ -227,10 +227,14 @@ export default function Page() {
         <div className="">
           {/* <p>{isset(session) ? session?.user?.name + "さん" : null}</p> */}
           <div className="col-9 d-flex justify-content-between">
-            <div className="pb-3">
-              <h1 className="border-primary border-start border-3 ps-3">イベント一覧</h1>
+            <div className="">
+              <div className="border-primary border-start border-3 ps-3">
+                <h1 className="m-0">イベント一覧</h1>
+                <p className="mb-5">Event list</p>
+              </div>
             </div>
-            <Link className="btn btn-warning rounded-pill mt-5" href="/event/new">＋イベントの作成</Link>
+            <div className="mt-4 mb-1"><Link className="btn btn-warning rounded-pill mt-5 h-45" href="/event/new">＋イベントの作成</Link></div>
+            
           </div>
         </div>
         <div className="row justify-content-around">
@@ -250,7 +254,7 @@ export default function Page() {
             })}
           </div>
           <div className="row gy-2 col-3 h-100">
-            <p className=" bg-secondary text-white rounded-top p-0 m-0 text-center">フィルター機能</p>
+            <p className=" bg-secondary text-white rounded-top py-1 m-0 text-center">フィルター機能</p>
             <div className="border border-secondary rounded-bottom mt-0">
               <div className="m-2">
                 <input className="form-control" type="text" placeholder="検索" onChange={(e) => setInputTech(e.target.value)} />

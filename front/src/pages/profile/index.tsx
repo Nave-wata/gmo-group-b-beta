@@ -131,7 +131,10 @@ export default function Page() {
       <div className=".container mt-5 container-fluid">
         <div className="mx-4">
           <div className="pb-4">
-            <h1 className="border-primary border-start border-3 ps-3">プロフィール</h1>
+            <div className="border-primary border-start border-3 ps-3">
+              <h1 className="m-0">プロフィール</h1>
+              <p className="mb-5">Profile</p>
+            </div>
           </div>
 
           <div>
@@ -169,11 +172,12 @@ export default function Page() {
               </div>
             </label>
             <br />
-            <label className="mb-3 d-flex justify-content-between">
-              <div className="mt-4">
-                <Link href="/home" className="btn btn-outline-secondary">＜戻る</Link>
+            <div className="m-2 d-flex justify-content-around">
+              <div className="mt-4 col-6 me-1">
+                <Link href="/home" className="col-12 btn btn-outline-secondary">＜ 戻る</Link>
               </div>
-              <button className="btn btn-primary col-10 mt-4" onClick={() => submit()}>更新</button></label>
+              <button className="btn btn-primary col-6 mt-4" onClick={() => submit()}>更新</button>
+            </div>
           </div>
         </div>
       </div>

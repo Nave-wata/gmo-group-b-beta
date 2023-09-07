@@ -98,7 +98,10 @@ export default function Page() {
         <div className=".container mt-5 container-fluid">
           <div className="mx-4">
             <div className="pb-5">
-              <h1 className="border-primary border-start border-3 ps-3">イベント作成</h1>
+              <div className="border-primary border-start border-3 ps-3">
+                <h1 className="m-0">イベント作成</h1>
+                <p className="mb-5">Event creation</p>
+              </div>
             </div>
             <div className="">
               <label className="form-label d-flex justify-content-around mb-3">
@@ -194,11 +197,11 @@ export default function Page() {
 
               </div>
             </div>
-            <div className="mb-3 d-flex justify-content-around">
-              <div className="mt-4">
-                <Link href="/home" className="btn btn-outline-secondary">＜戻る</Link>
+            <div className="my-5 d-flex justify-content-around">
+              <div className="mt-4 col-6 me-1">
+                <Link href="/home" className="col-12 btn btn-outline-secondary">＜ 戻る</Link>
               </div>
-              <button className="btn btn-primary col-9 mt-4" type="submit" onClick={() => {
+              <button className="btn btn-primary col-6 mt-4" type="submit" onClick={() => {
                 setIsChecking(true)
               }}>作成
               </button>
