@@ -60,7 +60,7 @@ export default function Page() {
     .catch((e) => { 
       if (process.env.NODE_ENV !== "production") console.error("ERROR",e)
     });
-  }, [session?.user])
+  }, [URL, session?.user])
 
   /**
    * @param e 名前入力欄の変更イベント 
