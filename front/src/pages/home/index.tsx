@@ -14,7 +14,7 @@ type Task = {
     "end_time": string,
     "location": string,
     "description": string,
-    "limitation": number,
+    "limitation": number | null,
     "record_url": string,
     "created_at": string,
     "edit_at": string,
@@ -238,7 +238,7 @@ export default function Page() {
                 <div className="row justify-content-around">
                     <div className="mt-2 col-9">
                         {tasks.map((task: any, index: number) => {
-                            if (hiddenTasks[index]||task.start_time < new Date().toISOString()) {
+                            if (hiddenTasks[index] || task.start_time < new Date().toISOString()) {
                                 return null
                             } else {
                                 return <div key={index}
@@ -249,7 +249,8 @@ export default function Page() {
                                         <h2>{task.start_time}</h2>
                                     </div>
                                     <div className="col-3 border-primary border-start pt-3  ps-2">
-                                        <h5>参加者 {task.limitation - reserveNum.remaining}/{task.limitation}人</h5>
+                                        {task.limitation &&
+                                            <h5>参加者 {task.limitation - reserveNum.remaining}/{task.limitation}人</h5>}
                                         <h5>場所 {task.location}</h5>
                                     </div>
                                 </div>
