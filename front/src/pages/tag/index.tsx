@@ -35,6 +35,7 @@ export default function Page() {
             setTag({
                 "name": ""
             });
+            alert("既に登録されているタグです");
             return;
         };
 
@@ -59,11 +60,24 @@ export default function Page() {
         <>
         <Link href="/home" className="mx-3 mt-3 btn btn-outline-secondary">＜戻る</Link>
         <div>
-        <label className="form-label d-flex justify-content-aroud m-2">
-            <p className="col-1 pt-2">新しいタグ</p>
-            <input className="form-control me-1" type="text" value={tag.name} onChange={handleChange}/>
-            <button className="btn btn-primary col-3" onClick={submitTagInfo}>送信</button>
-        </label>
+            <label className="form-label d-flex justify-content-aroud m-2">
+                <p className="col-1 pt-2">新しいタグ</p>
+                <input className="form-control me-1" type="text" value={tag.name} onChange={handleChange}/>
+                <button className="btn btn-primary col-3" onClick={submitTagInfo}>送信</button>
+            </label>
+            <div className="d-flex justify-content-center">
+                <ul>
+                    {savedTag.map((v, i) => {
+                        if (v.name.indexOf(tag.name) !== -1) {
+                            return (
+                                <li key={i} className="m-2">
+                                    {v.name}
+                                </li>
+                            )
+                        }
+                    })}
+                </ul>
+            </div>
         </div>
         </>
     )
