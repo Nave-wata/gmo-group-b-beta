@@ -54,9 +54,8 @@ export default function Page() {
   useEffect(() => {
     // const item = sessionStorage.getItem("profile");
     // if (item) setInputValue(JSON.parse(item));
-    const userId = user.id; 
-    if (!userId) return;
-    axios.get(`${URL}/api/user/${userId}`)
+    if (!user) return;
+    axios.get(`${URL}/api/user/${user.id}`)
     .then((res) => res.data)
     .then((data) => setInputValue(data))
     .catch((e) => { 
