@@ -24,10 +24,10 @@ export interface Technology {
 }
 
 type UserEntity = {
-    "id": string,
-    "email": string,
-    "accessToken": string,
-    "refreshToken": string,
+  "id": string,
+  "email": string,
+  "accessToken": string,
+  "refreshToken": string,
 };
 
 /**
@@ -49,7 +49,7 @@ export default function Page() {
   const URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:40000";
   const { data: session } = useSession();
   const user = session?.user as UserEntity;
-  
+
   // セッション内にプロフィールがあれば取得する
   useEffect(() => {
     // const item = sessionStorage.getItem("profile");
@@ -155,11 +155,14 @@ export default function Page() {
       <div className=".container mt-5 container-fluid">
         <div className="mx-4">
           <div className="pb-4">
-            <h1 className="border-primary border-start border-3 ps-3">プロフィール</h1>
+            <div className="border-primary border-start border-3 ps-3">
+              <h1 className="m-0">プロフィール</h1>
+              <p className="mb-3">Profile</p>
+            </div>
           </div>
 
-          <div>
-            <label className="form-label d-flex justify-content-around px-3">
+          <div className="border rounded shadow m-2 p-4">
+            <label className="form-label d-flex justify-content-around px-3 mt-3">
               <p className="col-3">お名前</p>
               <input className="form-control" type="text" value={inputValue.name} onChange={(e) => handleNameChange(e)} />
             </label>
@@ -182,7 +185,6 @@ export default function Page() {
                   <div key={index}>
                     <label className="form-label d-flex justify-content-around mb-2">
                       <input className="form-control me-1" type="text" value={ability.name} onChange={(e) => handletechnologiesChange(e, index, "name")} />
-
                       {/* <label>年数：<input type="text" value={ability.age} onChange={(e) => handletechnologiesChange(e, index, "age")} /></label> */}
                       <button className="col-3 btn btn-secondary" onClick={() => handleDeleteTechnology(index)}>削除</button>
                     </label>
@@ -192,12 +194,14 @@ export default function Page() {
                 <button className="col-12 btn btn-warning rounded-pill" onClick={() => handleAddTechnology()}>＋追加</button>
               </div>
             </label>
+
             <br />
-            <label className="mb-3 d-flex justify-content-between">
-              <div className="mt-4">
-                <Link href="/home" className="btn btn-outline-secondary">＜戻る</Link>
+            <div className="m-2 d-flex justify-content-around">
+              <div className="mt-4 col-6 me-1">
+                <Link href="/home" className="col-12 btn btn-outline-secondary">＜ 戻る</Link>
               </div>
-              <button className="btn btn-primary col-10 mt-4" onClick={() => submit()}>更新</button></label>
+              <button className="btn btn-primary col-6 mt-4" onClick={() => submit()}>更新</button>
+            </div>
           </div>
         </div>
       </div>
