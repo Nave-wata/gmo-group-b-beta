@@ -2,6 +2,7 @@ import {useRouter} from "next/router";
 import React, {useEffect, useState} from "react";
 import Link from "next/link";
 import {recordCalendar} from "@/lib/GoogleCalendarClient/calendarClient";
+import axios from "axios";
 
 const CalendarIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -15,9 +16,20 @@ const CalendarIcon = () => (
 
 type Event = {
     "id": number,
-    "create_user": string,
     "name": string,
-    "technologies": string[],
+    "event_technologies": [
+        {
+            "id": number,
+            "created_at": string,
+            "edit_at": string,
+            "technology": {
+                "id": number,
+                "name": string,
+                "created_at": string,
+                "edit_at": string
+            }
+        }
+    ],
     "start_time": string,
     "end_time": string,
     "location": string,
@@ -26,6 +38,22 @@ type Event = {
     "record_url": string,
     "created_at": string,
     "edit_at": string,
+    "google_calender_event_id": string,
+    "user": {
+        "id": number,
+        "name": string,
+        "email": string,
+        "department": string,
+        "token": string,
+        "created_at": string,
+        "edit_at": string
+    }
+}
+
+type Joiner = {
+    "id": number,
+    "name": string,
+    "users": any[],
 }
 
 export default function Page() {
@@ -39,46 +67,76 @@ export default function Page() {
 
 
     const [event, setEvent] = useState<Event>({
+    "description": "Let's study Vue.js!!!",
+    "limitation": 20,
+    "record_url": "aaaa@bbbb",
+    "id": 1,
+    "name": "dummy",
+    "start_time": "2024-02-02T08:00:00.000Z",
+    "end_time": "2024-02-02T10:00:00.000Z",
+    "location": "オンライン",
+    "google_calender_event_id": "test",
+    "created_at": "2023-09-08T01:35:27.367Z",
+    "edit_at": "2023-09-08T01:35:27.367Z",
+    "user": {
         "id": 1,
-        "create_user": "Taro",
-        "name": "Vue.js勉強会",
-        "technologies": [
-            "フロントエンド",
-            "Vue.js",
-        ],
-        "start_time": "2022-02-02 17:00",
-        "end_time": "2022-02-02 19:00",
-        "location": "オンライン",
-        "description": "Let's study Vue.js!!!",
-        "limitation": 20,
-        "record_url": "hoge.google.com?hogehogehoge",
-        "created_at": "2022-02-01 10:00",
-        "edit_at": "2022-02-01 12:00",
-    });
+        "name": "reiya",
+        "email": "reiya4742@gmail.com",
+        "department": "none",
+        "token": "112413653104775313391",
+        "created_at": "2023-09-08T01:34:54.579Z",
+        "edit_at": "2023-09-08T01:34:54.579Z"
+    },
+    "event_technologies": [
+        {
+            "id": 1,
+            "created_at": "2023-09-08T01:35:27.373Z",
+            "edit_at": "2023-09-08T01:35:27.373Z",
+            "technology": {
+                "id": 1,
+                "name": "Vue.js",
+                "created_at": "2023-09-08T01:35:03.116Z",
+                "edit_at": "2023-09-08T01:35:03.116Z"
+            }
+        }
+    ]
+});
     // 現在の予約者数を保持するもの
     const [reserveNum, setReserveNum] = useState({
-        "num": 15,
+        "remaining": 15,
     });
 
+    const [joiner, setJoiner] = useState<Joiner>({
+        "id": 1,
+        "name": "hello world",
+        "users": [
+            {}
+        ]
+    })
+
     const router = useRouter();
+    const URL = "http://localhost:40000";
 
     useEffect(() => {
         if (router.isReady) {
             const eventId = router.query.id;
-            const fetchEvent = async () => {
-                const response = await fetch(`/api/event/${eventId}`);
-                const data = await response.json();
-                setEvent(data);
-            };
-            const fetchReserveNum = async () => {
-                const response = await fetch(`/api/reserver/${eventId}`)
-                const data = await response.json();
-                setReserveNum(data);
-            }
-            fetchEvent();
-            fetchReserveNum();
+
+            axios.get(`${URL}/api/event/${eventId}`)
+                .then((res) => res.data)
+                .then((data) => setEvent(data))
+                .catch((e) => console.error("ERROR",e));
+                
+            axios.get(`${URL}/api/event/${eventId}/remaining`)
+                .then((res) => res.data)
+                .then((data) => setReserveNum(data))
+                .catch((e) => console.error("ERROR",e));
+
+            axios.get(`${URL}/api/user/event/${eventId}`)
+                .then((res) => res.data)
+                .then((data) => setJoiner(data))
+                .catch((e) => console.error("ERROR",e));
         }
-    }, [router]);
+    }, [router, URL]);
 
     const joinEvent = async () => {
         try {
@@ -126,14 +184,14 @@ export default function Page() {
                         <div className="row d-flex justify-content-around">
                             <h3 className="col-3 ps-5">ジャンル</h3>
                             <div className="col-6 mb-2">
-                                {event.technologies.map((tech, index) => (
-                                    <p className="mb-0" key={index}>{tech}</p>
+                                {event.event_technologies.map((tech, index) => (
+                                    <p className="mb-0" key={index}>{tech.technology.name}</p>
                                 ))}
                             </div>
                         </div>
                         <div className="row d-flex justify-content-around">
                             <h3 className="col-3 ps-5">主催者</h3>
-                            <h3 className="col-6">{event.create_user}</h3>
+                            <h3 className="col-6">{event.user.name}</h3>
                         </div>
                         <div className="row d-flex justify-content-around">
                             <h3 className="col-3 ps-5">場所</h3>
@@ -145,7 +203,7 @@ export default function Page() {
                         </div>
                         <div className="row d-flex justify-content-around">
                             <h3 className="col-3 ps-5">参加予定人数</h3>
-                            <h3 className="col-6">{reserveNum.num}</h3>
+                            <h3 className="col-6">{reserveNum.remaining}</h3>
                         </div>
                         <div className="d-flex justify-content-around">
                             <button className="btn btn-primary btn-lg col-9 mt-4" onClick={joinEvent}>イベントに参加
