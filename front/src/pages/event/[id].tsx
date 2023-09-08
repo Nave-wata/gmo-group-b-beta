@@ -1,8 +1,12 @@
 import {useRouter} from "next/router";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import Link from "next/link";
 import {recordCalendar} from "@/lib/GoogleCalendarClient/calendarClient";
 import axios from "axios";
+import {session} from "next-auth/core/routes";
+import {useSession} from "next-auth/react";
+import {mockSession} from "next-auth/client/__tests__/helpers/mocks";
+import user = mockSession.user;
 
 const CalendarIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -58,6 +62,13 @@ type Event = {
     }
 }
 
+type UserEntity = {
+    "id": string,
+    "email": string,
+    "accessToken": string,
+    "refreshToken": string,
+};
+
 type Joiner = {
     "id": number,
     "name": string,
@@ -65,6 +76,10 @@ type Joiner = {
 }
 
 export default function Page() {
+    const {data: session} = useSession();
+    const user = session?.user as UserEntity;
+    const router = useRouter();
+    const URL = "http://localhost:40000";
     const [isCalendarBtnHover, setIsCalendarBtnHover] = useState<boolean>(false);
     const [isDeleteBtnHover, setIsDeleteBtnHover] = useState<boolean>(false);
 
@@ -74,7 +89,6 @@ export default function Page() {
     const handleCalendarBtnLeave = () => {
         setIsCalendarBtnHover(false);
     }
-
 
     const [event, setEvent] = useState<Event>({
         "description": "Let's study Vue.js!!!",
@@ -123,9 +137,6 @@ export default function Page() {
             {}
         ]
     })
-
-    const router = useRouter();
-    const URL = "http://localhost:40000";
 
     useEffect(() => {
         if (router.isReady) {
@@ -183,6 +194,11 @@ export default function Page() {
         await router.push("/home");
     }
 
+    const isMine: boolean = useMemo(() => {
+        if (!user || !event||!event.user) return false;
+        return user.id === event.user.token;
+    }, [session, event, user]);
+
     return (
         <>
             <div className=".container mt-5 p-4 container-fluid">
@@ -238,19 +254,21 @@ export default function Page() {
                                     <CalendarIcon/>
                                 </div>
                             </div>
-                            <div
-                                style={{padding: 5, justifyContent: "center", display: "inline-flex", borderRadius: 5, border: "solid 1px black", color: isDeleteBtnHover ? "white" : "gray", backgroundColor: isDeleteBtnHover ? "gray" : "white"}}
-                                onMouseEnter={() => {
-                                    setIsDeleteBtnHover(true);
-                                }} onMouseLeave={() => {
-                                setIsDeleteBtnHover(false);
-                            }}
-                                onClick={onDeleteBtnClick}>
-                                <div style={{display: "inline-block", marginRight: "0.5rem"}}>勉強会を削除する</div>
-                                <div style={{position: "relative", bottom: 3}}>
-                                    <TrashIcon/>
+                            {isMine && (
+                                <div
+                                    style={{padding: 5, justifyContent: "center", display: "inline-flex", borderRadius: 5, border: "solid 1px black", color: isDeleteBtnHover ? "white" : "gray", backgroundColor: isDeleteBtnHover ? "gray" : "white"}}
+                                    onMouseEnter={() => {
+                                        setIsDeleteBtnHover(true);
+                                    }} onMouseLeave={() => {
+                                    setIsDeleteBtnHover(false);
+                                }}
+                                    onClick={onDeleteBtnClick}>
+                                    <div style={{display: "inline-block", marginRight: "0.5rem"}}>勉強会を削除する</div>
+                                    <div style={{position: "relative", bottom: 3}}>
+                                        <TrashIcon/>
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     </div>
                     <div className="mt-2">
