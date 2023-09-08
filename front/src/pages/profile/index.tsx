@@ -30,6 +30,10 @@ type UserEntity = {
   "refreshToken": string,
 };
 
+type Tag = {
+  "name": string,
+};
+
 /**
  * プロフィールページ
  * 
@@ -49,15 +53,17 @@ export default function Page() {
   const URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:40000";
   const { data: session } = useSession();
   const user = session?.user as UserEntity;
-
-  // セッション内にプロフィールがあれば取得する
+  const [savedTag, setSavedTag] = useState<Tag[]>([]);
+  // セッション内にプロフィールがあれば取 得する
   useEffect(() => {
     // const item = sessionStorage.getItem("profile");
     // if (item) setInputValue(JSON.parse(item));
     if (!user) return;
     axios.get(`${URL}/api/user/${user.id}`)
     .then((res) => res.data)
-    .then((data) => setInputValue(data))
+    .then((data) => {
+      setInputValue(data)
+    })
     .catch((e) => { 
       if (process.env.NODE_ENV !== "production") {
         console.error("ERROR",e)
@@ -67,6 +73,13 @@ export default function Page() {
       }
     });
   }, [URL, session?.user])
+
+  useEffect(() => {
+    axios.get(`${URL}/api/tag`)
+    .then((res) => res.data)
+    .then((data) => setSavedTag(data))
+    .catch((e) => null);    
+});
 
   /**
    * @param e 名前入力欄の変更イベント 
@@ -103,7 +116,9 @@ export default function Page() {
    * @param index 保有技術のindex
    * @param attribute 保有技術の属性
    */
-  const handletechnologiesChange = (e: React.ChangeEvent<HTMLInputElement>, index: number, attribute: string) => {
+  const handletechnologiesChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+    , index: number, attribute: string) => {
     const newInputValue = { ...inputValue };
     newInputValue.technologies[index] = {
       name: attribute === "name" ? e.target.value : inputValue.technologies[index].name,
@@ -184,7 +199,18 @@ export default function Page() {
                 {inputValue.technologies.map((ability, index) => (
                   <div key={index}>
                     <label className="form-label d-flex justify-content-around mb-2">
-                      <input className="form-control me-1" type="text" value={ability.name} onChange={(e) => handletechnologiesChange(e, index, "name")} />
+                      {/* <input className="form-control me-1" type="text" value={ability.name} onChange={(e) => handletechnologiesChange(e, index, "name")} /> */}
+                      <select defaultValue={""} onChange={(e) => handletechnologiesChange(e, index, "name")}>
+                        <option value={""}>選択してください</option>
+                        {savedTag.map((tag, i) =>  {
+                          const name = inputValue.technologies[index] && inputValue.technologies[index].name !== ""
+                            ? inputValue.technologies[index].name ?? tag.name
+                            : tag.name
+                          return <option key={i} value={name}>{name}</option>
+                        }
+                        )}
+                      </select>
+
                       {/* <label>年数：<input type="text" value={ability.age} onChange={(e) => handletechnologiesChange(e, index, "age")} /></label> */}
                       <button className="col-3 btn btn-secondary" onClick={() => handleDeleteTechnology(index)}>削除</button>
                     </label>
