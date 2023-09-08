@@ -15,7 +15,7 @@ type Event = {
     "end_time": string,
     "location": string,
     "description": string,
-    "limitation": number|null,
+    "limitation": number,
 };
 
 type UserEntity = {
@@ -40,7 +40,7 @@ export default function Page() {
         "end_time": "",
         "location": "",
         "description": "",
-        "limitation": null,
+        "limitation": 0,
     });
     // sample default value
     // "create_user": "1",
@@ -277,13 +277,8 @@ export default function Page() {
                                 <label className="form-label d-flex mb-3 justify-content-between">
                                     <p className="col-3 ps-3">定員</p>
                                     <input className="form-control" type="number" name="limitation"
-<<<<<<< HEAD
-                                           placeholder="Default input" aria-label="default input example"
-                                           onChange={handleChange} required></input>
-=======
                                         placeholder="Default input" aria-label="default input example"
                                         value={formData.limitation} onChange={handleChange} required></input>
->>>>>>> 21c5c43 (add-font-desgin)
                                 </label>
                             </div>
                             {/* <div className="d-flex justify-content-around mb-3">

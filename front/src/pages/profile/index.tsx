@@ -54,7 +54,6 @@ export default function Page() {
   useEffect(() => {
     // const item = sessionStorage.getItem("profile");
     // if (item) setInputValue(JSON.parse(item));
-<<<<<<< HEAD
     if (!user) return;
     axios.get(`${URL}/api/user/${user.id}`)
     .then((res) => res.data)
@@ -67,21 +66,6 @@ export default function Page() {
         router.push("/register");
       }
     });
-=======
-    const userId = user.id;
-    if (!userId) return;
-    axios.get(`${URL}/api/user/${userId}`)
-      .then((res) => res.data)
-      .then((data) => setInputValue(data))
-      .catch((e) => {
-        if (process.env.NODE_ENV !== "production") {
-          console.error("ERROR", e)
-        }
-        if (e.response.status === 404) {
-          router.push("/register");
-        }
-      });
->>>>>>> 21c5c43 (add-font-desgin)
   }, [URL, session?.user])
 
   /**
