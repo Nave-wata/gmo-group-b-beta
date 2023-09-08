@@ -117,7 +117,7 @@ export default function Page() {
    */
   const handleAddTechnology = () => {
     // 入力がない場合は追加しない
-    if (inputValue.technologies[inputValue.technologies.length - 1].name === "") return;
+    if (inputValue.technologies.length >= 1 && inputValue.technologies[inputValue.technologies.length - 1].name === "") return;
     // if (inputValue.technologies[inputValue.technologies.length - 1].age === "") return;
 
     const newInputValue = { ...inputValue };
@@ -132,8 +132,6 @@ export default function Page() {
    * @param index 削除する保有技術のindex
    */
   const handleDeleteTechnology = (index: number) => {
-    // 技術が1つしかない場合は削除しない
-    if (inputValue.technologies.length === 1) return;
     const newInputValue = { ...inputValue };
     newInputValue.technologies.splice(index, 1);
     setInputValue(newInputValue);
