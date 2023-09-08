@@ -1,16 +1,16 @@
-import {useRouter} from "next/router";
-import React, {useEffect, useState} from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import {recordCalendar} from "@/lib/GoogleCalendarClient/calendarClient";
 import axios from "axios";
 
 const CalendarIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-         className="bi bi-calendar2-date-fill" viewBox="0 0 16 16">
+        className="bi bi-calendar2-date-fill" viewBox="0 0 16 16">
         <path
-            d="M9.402 10.246c.625 0 1.184-.484 1.184-1.18 0-.832-.527-1.23-1.16-1.23-.586 0-1.168.387-1.168 1.21 0 .817.543 1.2 1.144 1.2z"/>
+            d="M9.402 10.246c.625 0 1.184-.484 1.184-1.18 0-.832-.527-1.23-1.16-1.23-.586 0-1.168.387-1.168 1.21 0 .817.543 1.2 1.144 1.2z" />
         <path
-            d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zm9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5zm-4.118 9.79c1.258 0 2-1.067 2-2.872 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82h-.684c.047.64.594 1.406 1.703 1.406zm-2.89-5.435h-.633A12.6 12.6 0 0 0 4.5 8.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61h.675V7.354z"/>
+            d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zm9.954 3H2.545c-.3 0-.545.224-.545.5v1c0 .276.244.5.545.5h10.91c.3 0 .545-.224.545-.5v-1c0-.276-.244-.5-.546-.5zm-4.118 9.79c1.258 0 2-1.067 2-2.872 0-1.934-.781-2.668-1.953-2.668-.926 0-1.797.672-1.797 1.809 0 1.16.824 1.77 1.676 1.77.746 0 1.23-.376 1.383-.79h.027c-.004 1.316-.461 2.164-1.305 2.164-.664 0-1.008-.45-1.05-.82h-.684c.047.64.594 1.406 1.703 1.406zm-2.89-5.435h-.633A12.6 12.6 0 0 0 4.5 8.16v.695c.375-.257.969-.62 1.258-.777h.012v4.61h.675V7.354z" />
     </svg>
 )
 
@@ -185,21 +185,24 @@ export default function Page() {
 
     return (
         <>
-            <div className=".container mt-5 p-4 container-fluid">
-                <div className="mx-4">
+            <div className=".container mt-4 p-3 container-fluid">
+                <div className="mx-2">
                     <div className="pb-3">
-                        <h1 className="border-primary border-start border-3 ps-3">イベント詳細確認</h1>
+                        <div className="border-primary border-start border-3 ps-3">
+                            <h1 className="m-0">イベント詳細確認</h1>
+                            <p className="mb-5">Event details</p>
+                        </div>
                     </div>
-                    <div className="border border-secondary rounded p-4" style={{position: "relative"}}>
-                        <div className="row d-flex justify-content-around">
-                            <h3 className="col-3 ps-5 ">日付</h3>
-                            <h3 className="col-6">{event.start_time}</h3>
+                    <div className="border rounded shadow m-2 p-4" style={{ position: "relative" }}>
+                        <div className="row d-flex justify-content-evenly">
+                            <h3 className="col-3 ps-5 mt-4">日付</h3>
+                            <h3 className="col-4 mt-4 ps-5">{event.start_time}</h3>
                         </div>
-                        <div className="row d-flex justify-content-around">
+                        <div className="row d-flex justify-content-evenly">
                             <h3 className="col-3 ps-5">イベント名</h3>
-                            <h3 className="col-6">{event.name}</h3>
+                            <h3 className="col-4 ps-5">{event.name}</h3>
                         </div>
-                        <div className="row d-flex justify-content-around">
+                        <div className="row d-flex justify-content-evenly">
                             <h3 className="col-3 ps-5">ジャンル</h3>
                             <div className="col-6 mb-2">
                                 {event.event_technologies.map((tech, index) => (
@@ -207,27 +210,28 @@ export default function Page() {
                                 ))}
                             </div>
                         </div>
-                        <div className="row d-flex justify-content-around">
+                        <div className="row d-flex justify-content-evenly">
                             <h3 className="col-3 ps-5">主催者</h3>
-                            <h3 className="col-6">{event.user.name}</h3>
+                            <h3 className="col-4 ps-5">{event.user.name}</h3>
                         </div>
-                        <div className="row d-flex justify-content-around">
+                        <div className="row d-flex justify-content-evenly">
                             <h3 className="col-3 ps-5">場所</h3>
-                            <h3 className="col-6">{event.location}</h3>
+                            <h3 className="col-4 ps-5">{event.location}</h3>
                         </div>
-                        <div className="row d-flex justify-content-around">
+                        <div className="row d-flex justify-content-evenly">
                             <h3 className="col-3 ps-5">定員</h3>
-                            <h3 className="col-6">{event.limitation}</h3>
+                            <h3 className="col-4 ps-5">{event.limitation}</h3>
                         </div>
-                        <div className="row d-flex justify-content-around">
+                        <div className="row d-flex justify-content-evenly">
                             <h3 className="col-3 ps-5">参加予定人数</h3>
                             <h3 className="col-6">{reserveNum.remaining}</h3>
                         </div>
-                        <div className="d-flex justify-content-around">
-                            <button className="btn btn-primary btn-lg col-9 mt-4" onClick={joinEvent}>
-                                イベントに参加
-                            </button>
-                        </div>
+                                                <div className="mt-4 mb-2 d-flex justify-content-evenly">
+                                                <div className="mt-4 col-6 me-1">
+                                                    <Link href="/home" className="col-12 btn btn-outline-secondary">＜ 戻る</Link>
+                                                </div>
+                                                <button className="btn btn-primary col-6 mt-4" onClick={joinEvent}>イベントに参加</button>
+                                            </div>
                         <div style={{position: "absolute", top: 5, right: 5, display: "flex", flexDirection: "column"}}>
                             <div
                                 style={{marginBottom: 5, padding: 5, justifyContent: "center", display: "inline-flex", borderRadius: 5, border: "solid 1px black", color: isCalendarBtnHover ? "white" : "gray", backgroundColor: isCalendarBtnHover ? "gray" : "white"}}
@@ -252,9 +256,6 @@ export default function Page() {
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div className="mt-2">
-                        <Link href="/home" className="btn btn-outline-secondary">＜戻る</Link>
                     </div>
                 </div>
             </div>

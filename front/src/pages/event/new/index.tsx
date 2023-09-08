@@ -1,8 +1,8 @@
-import React, {use, useEffect, useState} from "react";
+import React, { use, useEffect, useState } from "react";
 import Agreement from "@/components/Agreement";
 import Link from "next/link";
 import ReactLoading from 'react-loading';
-import {recordCalendar} from "@/lib/GoogleCalendarClient/calendarClient";
+import { recordCalendar } from "@/lib/GoogleCalendarClient/calendarClient";
 import RequiredMark from "@/components/RequiredMark";
 import { useSession } from "next-auth/react";
 import {useRouter} from "next/router";
@@ -68,25 +68,25 @@ export default function Page() {
     // });
     const URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:40000";
     const { data: session } = useSession();
-    
+
     useEffect(() => {
         const user = session?.user as UserEntity;
-       const userId = user.id;
-    setFormData({
-        ...formData,
-        create_user: user.id
-    })
-   },[session?.user]) 
-    
+        const userId = user.id;
+        setFormData({
+            ...formData,
+            create_user: user.id
+        })
+    }, [session?.user])
+
     const handleChange = async (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const {name, value} = e.target;
-        setFormData({...formData, [name]: value})
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value })
     };
-    
+
     const handleTechChange = async (e: React.ChangeEvent<HTMLInputElement>, index: number) => {
         const newTech = [...formData.technologies]
         newTech[index] = e.target.value;
-        setFormData({...formData, technologies: newTech })
+        setFormData({ ...formData, technologies: newTech })
     };
 
     const submitEventInfo = async () => {
@@ -125,11 +125,11 @@ export default function Page() {
     };
 
     const addTags = async () => {
-        setFormData({...formData, technologies: [...formData.technologies, ""]});
+        setFormData({ ...formData, technologies: [...formData.technologies, ""] });
     }
 
     const removeTags = (index: number) => {
-        const newFormData = {...formData};
+        const newFormData = { ...formData };
         newFormData.technologies.splice(index, 1);
         setFormData(newFormData);
     }
@@ -145,7 +145,7 @@ export default function Page() {
         if (formData.technologies.length === 0) {
             lackArray.push("技術ラベル");
         }
-        if(formData.location=== ""){
+        if (formData.location === "") {
             lackArray.push("場所");
         }
         let isStartDateExist: boolean = false;
@@ -199,65 +199,69 @@ export default function Page() {
                 <div className=".container mt-5 container-fluid">
                     <div className="mx-4">
                         <div className="pb-5">
-                            <h1 className="border-primary border-start border-3 ps-3">イベント作成</h1>
+                            <div className="border-primary border-start border-3 ps-3">
+                                <h1 className="m-0">イベント作成</h1>
+                                <p className="mb-5">Event creation</p>
+                            </div>
                         </div>
                         <div className="">
                             <label className="form-label d-flex justify-content-around mb-3">
-                                <p className="col-3 ps-3">イベント名<RequiredMark/></p>
+                                <p className="col-3 ps-3">イベント名<RequiredMark /></p>
                                 <input className="form-control" type="text" name="name" value={formData.name}
-                                       onChange={handleChange}
-                                       required/>
+                                    onChange={handleChange}
+                                    required />
                             </label>
 
                         </div>
                         <div className="border-2 border-top">
+                            <div className="mb-3"></div>
                             {formData.technologies.map((tech, index) => (
                                 <div key={index} className="">
                                     <label className="form-label d-flex justify-content-around m-2">
                                         <p className="col-3 ps-2">技術ラベル{index + 1} </p>
                                         <input className="form-control me-1" type="text" name={`technologies[${index}]`}
-                                               value={tech}
-                                               onChange={(e) => handleTechChange(e, index)} required/>
+                                            value={tech}
+                                            onChange={(e) => handleTechChange(e, index)} required />
                                         <button className="col-3 btn btn-secondary" type="button"
-                                                onClick={() => removeTags(index)}>タグの削除
+                                            onClick={() => removeTags(index)}>タグの削除
                                         </button>
                                     </label>
                                     {/* <div className="col-1"></div> */}
 
                                 </div>
                             ))}
-                            <RequiredMark/>
+                            <RequiredMark />
                             <div className="d-flex justify-content-around mb-3">
                                 <div className="col-3"></div>
                                 <button className="col-9 btn btn-warning rounded-pill" type="button"
-                                        onClick={addTags}>＋新しいタグの追加
+                                    onClick={addTags}>＋新しいタグの追加
                                 </button>
                             </div>
                         </div>
                         <div className=" border-2 border-top">
                             <div className="">
                                 <label className="d-flex justify-content-around my-3">
-                                    <p className="col-3 ps-3">開始時刻<RequiredMark/></p>
+                                    <p className="col-3 ps-3">開始時刻<RequiredMark /></p>
                                     <input className="form-control" type="datetime-local" name="start_time"
-                                           value={formData.start_time}
-                                           onChange={handleChange} required/>
+                                        value={formData.start_time}
+                                        onChange={handleChange} required />
                                 </label>
                             </div>
                             <div className="">
                                 <label className="d-flex justify-content-around mb-3">
-                                    <p className="col-3 ps-3">終了時刻<RequiredMark/></p>
+                                    <p className="col-3 ps-3">終了時刻<RequiredMark /></p>
                                     <input className="form-control" type="datetime-local" name="end_time"
-                                           value={formData.end_time}
-                                           onChange={handleChange} required/>
+                                        value={formData.end_time}
+                                        onChange={handleChange} required />
                                 </label>
 
                             </div>
                             <div className="">
                                 <label className="form-label d-flex justify-content-around mb-3">
-                                    <p className="col-3 ps-3">場所<RequiredMark/></p>
+                                    <p className="col-3 ps-3">場所<RequiredMark /></p>
                                     <input className="form-control" type="text" name="location"
-                                           value={formData.location}
-                                           onChange={handleChange} required/>
+                                        value={formData.location}
+                                        onChange={handleChange} required />
                                 </label>
                             </div>
 
@@ -273,8 +277,13 @@ export default function Page() {
                                 <label className="form-label d-flex mb-3 justify-content-between">
                                     <p className="col-3 ps-3">定員</p>
                                     <input className="form-control" type="number" name="limitation"
+<<<<<<< HEAD
                                            placeholder="Default input" aria-label="default input example"
                                            onChange={handleChange} required></input>
+=======
+                                        placeholder="Default input" aria-label="default input example"
+                                        value={formData.limitation} onChange={handleChange} required></input>
+>>>>>>> 21c5c43 (add-font-desgin)
                                 </label>
                             </div>
                             {/* <div className="d-flex justify-content-around mb-3">
@@ -285,21 +294,21 @@ export default function Page() {
 
                             <div className="">
                                 <label htmlFor="exampleFormControlTextarea1"
-                                       className="form-label d-flex mb-3 justify-content-between">
+                                    className="form-label d-flex mb-3 justify-content-between">
                                     <p className="col-3 ps-3">イベントの説明</p>
                                     <textarea className="form-control" name="description"
-                                              id="exampleFormControlTextarea1" value={formData.description}
-                                              rows={5} onChange={handleChange} required></textarea>
+                                        id="exampleFormControlTextarea1" value={formData.description}
+                                        rows={5} onChange={handleChange} required></textarea>
                                 </label>
                                 {/* <label>部署：<input type="text" value={inputValue.department} onChange={(e) => handleDepartmentChange(e)} /></label> */}
 
                             </div>
                         </div>
-                        <div className="mb-3 d-flex justify-content-around">
-                            <div className="mt-4">
-                                <Link href="/home" className="btn btn-outline-secondary">＜戻る</Link>
+                        <div className="my-5 d-flex justify-content-around">
+                            <div className="mt-4 col-6 me-1">
+                                <Link href="/home" className="col-12 btn btn-outline-secondary">＜ 戻る</Link>
                             </div>
-                            <button className="btn btn-primary col-9 mt-4" type="submit" onClick={() => {
+                            <button className="btn btn-primary col-6 mt-4" type="submit" onClick={() => {
                                 const result = validate();
                                 if (result) {
                                     setIsChecking(true);
@@ -311,20 +320,20 @@ export default function Page() {
                 </div>
                 {isChecking && (
                     <Agreement content={"イベントを作成しますか？"}
-                               handleOnAgree={async () => {
+                        handleOnAgree={async () => {
 
-                                   setIsLoading(true);
-                                   await submitEventInfo();
-                                   setIsLoading(false);
+                            setIsLoading(true);
+                            await submitEventInfo();
+                            setIsLoading(false);
 
-                                   setIsChecking(false);
-                               }}
-                               handleOnDisagree={() => {
-                                   setIsChecking(false);
-                               }}/>)}
+                            setIsChecking(false);
+                        }}
+                        handleOnDisagree={() => {
+                            setIsChecking(false);
+                        }} />)}
 
             </div>
-            {isLoading && <ReactLoading type={"spin"} color={"#000000"} height={667} width={375}/>}
+            {isLoading && <ReactLoading type={"spin"} color={"#000000"} height={667} width={375} />}
         </>
     )
 }
