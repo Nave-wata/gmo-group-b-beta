@@ -206,12 +206,17 @@ export default function Page() {
                             <h3 className="col-6">{reserveNum.remaining}</h3>
                         </div>
                         <div className="d-flex justify-content-around">
-                            <button className="btn btn-primary btn-lg col-9 mt-4" onClick={joinEvent}>イベントに参加
+                            <button className="btn btn-primary btn-lg col-9 mt-4" onClick={joinEvent}>
+                                イベントに参加
+                            </button>
+                            <button>
+                                イベントをキャンセル
                             </button>
                         </div>
                         <div
                             style={{padding: 5, justifyContent: "center", display: "inline-flex", borderRadius: 5, border: "solid 1px black", color: isCalendarBtnHover ? "white" : "gray", backgroundColor: isCalendarBtnHover ? "gray" : "white", position: "absolute", top: 5, right: 5}}
-                            onMouseEnter={handleCalendarBtnEnter} onMouseLeave={handleCalendarBtnLeave} onClick={onCalendarBtnClick}>
+                            onMouseEnter={handleCalendarBtnEnter} onMouseLeave={handleCalendarBtnLeave}
+                            onClick={onCalendarBtnClick}>
                             <div style={{display: "inline-block", marginRight: "0.5rem"}}>カレンダーに追加する</div>
                             <div style={{position: "relative", bottom: 3}}>
                                 <CalendarIcon/>
