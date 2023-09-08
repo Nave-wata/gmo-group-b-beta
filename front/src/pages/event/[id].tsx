@@ -1,11 +1,11 @@
-import {useRouter} from "next/router";
-import React, {useEffect, useMemo, useState} from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import {recordCalendar} from "@/lib/GoogleCalendarClient/calendarClient";
+import { recordCalendar } from "@/lib/GoogleCalendarClient/calendarClient";
 import axios from "axios";
-import {session} from "next-auth/core/routes";
-import {useSession} from "next-auth/react";
-import {mockSession} from "next-auth/client/__tests__/helpers/mocks";
+import { session } from "next-auth/core/routes";
+import { useSession } from "next-auth/react";
+import { mockSession } from "next-auth/client/__tests__/helpers/mocks";
 import user = mockSession.user;
 
 const CalendarIcon = () => (
@@ -20,9 +20,9 @@ const CalendarIcon = () => (
 
 const TrashIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash-fill"
-         viewBox="0 0 16 16">
+        viewBox="0 0 16 16">
         <path
-            d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+            d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
     </svg>
 )
 
@@ -76,7 +76,7 @@ type Joiner = {
 }
 
 export default function Page() {
-    const {data: session} = useSession();
+    const { data: session } = useSession();
     const user = session?.user as UserEntity;
     const router = useRouter();
     const URL = "http://localhost:40000";
@@ -195,7 +195,7 @@ export default function Page() {
     }
 
     const isMine: boolean = useMemo(() => {
-        if (!user || !event||!event.user) return false;
+        if (!user || !event || !event.user) return false;
         return user.id === event.user.token;
     }, [session, event, user]);
 
@@ -220,7 +220,7 @@ export default function Page() {
                         </div>
                         <div className="row d-flex justify-content-evenly">
                             <h3 className="col-3 ps-5">ジャンル</h3>
-                            <div className="col-6 mb-2">
+                            <div className="col-4 ps-5 mb-2">
                                 {event.event_technologies.map((tech, index) => (
                                     <p className="mb-0" key={index}>{tech.technology.name}</p>
                                 ))}
@@ -240,36 +240,36 @@ export default function Page() {
                         </div>
                         <div className="row d-flex justify-content-evenly">
                             <h3 className="col-3 ps-5">参加予定人数</h3>
-                            <h3 className="col-6">{reserveNum.remaining}</h3>
+                            <h3 className="col-4 ps-5">{reserveNum.remaining}</h3>
                         </div>
-                                                <div className="mt-4 mb-2 d-flex justify-content-evenly">
-                                                <div className="mt-4 col-6 me-1">
-                                                    <Link href="/home" className="col-12 btn btn-outline-secondary">＜ 戻る</Link>
-                                                </div>
-                                                <button className="btn btn-primary col-6 mt-4" onClick={joinEvent}>イベントに参加</button>
-                                            </div>
-                        <div style={{position: "absolute", top: 5, right: 5, display: "flex", flexDirection: "column"}}>
+                        <div className="mt-4 mb-2 d-flex justify-content-evenly">
+                            <div className="mt-4 col-6 me-1">
+                                <Link href="/home" className="col-12 btn btn-outline-secondary">＜ 戻る</Link>
+                            </div>
+                            <button className="btn btn-primary col-6 mt-4" onClick={joinEvent}>イベントに参加</button>
+                        </div>
+                        <div style={{ position: "absolute", top: 5, right: 5, display: "flex", flexDirection: "column" }}>
                             <div
-                                style={{marginBottom: 5, padding: 5, justifyContent: "center", display: "inline-flex", borderRadius: 5, border: "solid 1px black", color: isCalendarBtnHover ? "white" : "gray", backgroundColor: isCalendarBtnHover ? "gray" : "white"}}
+                                style={{ marginBottom: 5, padding: 5, justifyContent: "center", display: "inline-flex", borderRadius: 5, border: "solid 1px black", color: isCalendarBtnHover ? "white" : "gray", backgroundColor: isCalendarBtnHover ? "gray" : "white" }}
                                 onMouseEnter={handleCalendarBtnEnter} onMouseLeave={handleCalendarBtnLeave}
                                 onClick={onCalendarBtnClick}>
-                                <div style={{display: "inline-block", marginRight: "0.5rem"}}>カレンダーに追加する</div>
-                                <div style={{position: "relative", bottom: 3}}>
-                                    <CalendarIcon/>
+                                <div style={{ display: "inline-block", marginRight: "0.5rem" }}>カレンダーに追加する</div>
+                                <div style={{ position: "relative", bottom: 3 }}>
+                                    <CalendarIcon />
                                 </div>
                             </div>
                             {isMine && (
                                 <div
-                                    style={{padding: 5, justifyContent: "center", display: "inline-flex", borderRadius: 5, border: "solid 1px black", color: isDeleteBtnHover ? "white" : "gray", backgroundColor: isDeleteBtnHover ? "gray" : "white"}}
+                                    style={{ padding: 5, justifyContent: "center", display: "inline-flex", borderRadius: 5, border: "solid 1px black", color: isDeleteBtnHover ? "white" : "gray", backgroundColor: isDeleteBtnHover ? "gray" : "white" }}
                                     onMouseEnter={() => {
                                         setIsDeleteBtnHover(true);
                                     }} onMouseLeave={() => {
-                                    setIsDeleteBtnHover(false);
-                                }}
+                                        setIsDeleteBtnHover(false);
+                                    }}
                                     onClick={onDeleteBtnClick}>
-                                    <div style={{display: "inline-block", marginRight: "0.5rem"}}>勉強会を削除する</div>
-                                    <div style={{position: "relative", bottom: 3}}>
-                                        <TrashIcon/>
+                                    <div style={{ display: "inline-block", marginRight: "0.5rem" }}>勉強会を削除する</div>
+                                    <div style={{ position: "relative", bottom: 3 }}>
+                                        <TrashIcon />
                                     </div>
                                 </div>
                             )}

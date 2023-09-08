@@ -36,7 +36,7 @@ export default function Page() {
     return (
         <>
             <div className={"d-flex justify-content-center"}>
-                <div className={"w-75 rounded border rounded-3 border-2 border-secondery d-flex flex-column justify-content-center text-center p-3"}
+                <div className={"w-75  shadow rounded border rounded-3 border border-secondery d-flex flex-column justify-content-center text-center p-3"}
                     style={{ marginTop: "25vh", alignItems: "center" }}>
                     <div className={"fs-3"}>ログイン</div>
                     <div className={"w-100 my-3"}>下のボタンを押してGoogleアカウントにログインしてください。</div>
