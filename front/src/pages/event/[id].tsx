@@ -4,8 +4,8 @@ import Link from "next/link";
 import { recordCalendar } from "@/lib/GoogleCalendarClient/calendarClient";
 import axios from "axios";
 import { session } from "next-auth/core/routes";
-import { useSession } from "next-auth/react";
-import { mockSession } from "next-auth/client/__tests__/helpers/mocks";
+import {useSession} from "next-auth/react";
+import {mockSession} from "next-auth/client/__tests__/helpers/mocks";
 import user = mockSession.user;
 
 const CalendarIcon = () => (
@@ -25,6 +25,13 @@ const TrashIcon = () => (
             d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z" />
     </svg>
 )
+
+type UserEntity = {
+    "id": string,
+    "email": string,
+    "accessToken": string,
+    "refreshToken": string,
+};
 
 type Event = {
     "id": number,
@@ -61,13 +68,6 @@ type Event = {
         "edit_at": string
     }
 }
-
-type UserEntity = {
-    "id": string,
-    "email": string,
-    "accessToken": string,
-    "refreshToken": string,
-};
 
 type Joiner = {
     "id": number,
@@ -137,7 +137,6 @@ export default function Page() {
             {}
         ]
     })
-
     useEffect(() => {
         if (router.isReady) {
             const eventId = router.query.id;
@@ -161,12 +160,20 @@ export default function Page() {
 
     const joinEvent = async () => {
         try {
-            const response = await fetch(`/api/joinEvent/${event.id}`, {
+            const userId = user.id;
+            const response = await fetch(`${URL}/api/event/${event.id}/apply/${userId}`, {
                 method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
             });
 
             if (response.ok) {
-                if (process.env.NODE_ENV !== "production") console.log("joined event.");
+                if (process.env.NODE_ENV !== "production") {
+                    console.log("joined event.");
+                    router.push("/home");
+                }
             } else {
                 if (process.env.NODE_ENV !== "production") console.log("cannot join event.")
             }
