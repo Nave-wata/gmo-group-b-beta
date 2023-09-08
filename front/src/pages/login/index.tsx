@@ -1,14 +1,37 @@
 import React from "react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { isset } from "@/utils/isType";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import axios from "axios";
+
+type UserEntity = {
+    id: string;
+    name: string;
+    email: string;
+}
 
 export default function Page() {
     const { data: session } = useSession();
     const router = useRouter();
 
-    if (isset(session)) router.push("/home");
+    if (session?.user) {
+        const user = session?.user as UserEntity;
+        const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:40000";
+
+        axios.post(`${API_URL}/api/user`, {
+            name: user.name,
+            email: user.email,
+            department: "未設定",
+            token: user.id,
+        })
+            .then((res) => router.push("/home"))
+            .catch((err) => {
+                err.response.status !== 409
+                    ? signOut()
+                    : router.push("/home");
+            });
+    }
 
     return (
         <>

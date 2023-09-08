@@ -69,23 +69,25 @@ export class UserController {
         user.token = token
         await this.userRepository.save(user)
 
-        technologies.forEach(async (technologyName: string) => {
-            const find_tech = await this.technologyRepository.findOne({
-                where: { name: technologyName },
-            });
+        if (Array.isArray(technologies)) {
+            technologies.forEach(async (technologyName: string) => {
+                const find_tech = await this.technologyRepository.findOne({
+                    where: { name: technologyName },
+                });
 
-            if(find_tech !== null) {
-                const _technology = new Technology()
-                _technology.id = find_tech.id
-                _technology.name  = find_tech.name
+                if(find_tech !== null) {
+                    const _technology = new Technology()
+                    _technology.id = find_tech.id
+                    _technology.name  = find_tech.name
 
-                const user_tech = new UserTechnology()
-                user_tech.user = user
-                user_tech.technology = _technology
+                    const user_tech = new UserTechnology()
+                    user_tech.user = user
+                    user_tech.technology = _technology
 
-                await this.userTechnologyRepository.save(user_tech)
-            }
-        })
+                    await this.userTechnologyRepository.save(user_tech)
+                }
+            })
+        }
 
         const savedUser: User = await this.userRepository.findOne({
             relations: ['user_technologies', 'user_technologies.technology'],
