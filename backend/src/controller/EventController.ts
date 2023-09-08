@@ -239,13 +239,13 @@ export class EventController {
         const event_id: number = parseInt(request.params.id)
         const event = await this.eventRepository.findOne({
             relations: ['reservations', 'reservations.user'],
-            where: { id: event_id },
+            where: {id: event_id},
         });
 
-        let remaining: number|null = null
-        if(event?.limitation !== null && event?.limitation !== undefined) {
-            const reservationing_count = (event.reservations?.length===undefined) ? 0 : event.reservations.length
-            remaining = event?.limitation-reservationing_count
+        let remaining: number | null = null
+        if (event?.limitation !== null && event?.limitation !== undefined) {
+            const reservationing_count = (event.reservations?.length === undefined) ? 0 : event.reservations.length
+            remaining = event?.limitation - reservationing_count
         }
         const res = {
             'remaining': remaining
@@ -260,17 +260,17 @@ export class EventController {
         const tag_id: number = parseInt(request.params.id)
         const technology = await this.technologyRepository.findOne({
             relations: ['event_technologies', 'event_technologies.event'],
-            where: { id: tag_id },
+            where: {id: tag_id},
         });
 
-        if(technology === null) {
+        if (technology === null) {
             response.status(404).json({message: "Not Found"})
             return
         }
 
         const eventList: Event[] = []
         technology.event_technologies?.forEach((event_tech: EventTechnology) => {
-            if(event_tech.event !== undefined) {
+            if (event_tech.event !== undefined) {
                 eventList.push(event_tech.event)
             }
         })
@@ -291,29 +291,29 @@ export class EventController {
     async applyEvent(request: Request, response: Response, next: NextFunction) {
         const event_id: number = parseInt(request.params.event_id)
         const user_token: string = request.params.user_token
-        const event: Event|null = await this.eventRepository.findOne({
+        const event: Event | null = await this.eventRepository.findOne({
             relations: ['reservations', 'reservations.user'],
-            where: { id: event_id },
+            where: {id: event_id},
         });
-        const user: User|null = await this.userRepository.findOne({
-            where: { token: user_token },
+        const user: User | null = await this.userRepository.findOne({
+            where: {token: user_token},
         });
 
-        if(event === undefined || event === null || user == undefined || user === null) {
+        if (event === undefined || event === null || user == undefined || user === null) {
             response.status(404).send({message: "NotFound"})
             return
         }
 
         let is_applied: Boolean = false
-        if(event?.reservations !== undefined) {
+        if (event?.reservations !== undefined) {
             event?.reservations.forEach((reservation) => {
-                if(reservation.user !== undefined && reservation.user.token === user_token) {
+                if (reservation.user !== undefined && reservation.user.token === user_token) {
                     is_applied = true
                 }
             });
         }
 
-        if(is_applied) {
+        if (is_applied) {
             response.status(400).send({message: "BadRequest"})
             return
         }

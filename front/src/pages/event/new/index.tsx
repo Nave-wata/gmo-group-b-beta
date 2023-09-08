@@ -5,6 +5,7 @@ import ReactLoading from 'react-loading';
 import {recordCalendar} from "@/lib/GoogleCalendarClient/calendarClient";
 import RequiredMark from "@/components/RequiredMark";
 import { useSession } from "next-auth/react";
+import {useRouter} from "next/router";
 
 type Event = {
     "create_user": string,
@@ -25,6 +26,7 @@ type UserEntity = {
 };
 
 export default function Page() {
+    const router = useRouter();
     const [isChecking, setIsChecking] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [formData, setFormData] = useState<Event>({
@@ -105,6 +107,8 @@ export default function Page() {
         } catch (error) {
             if (process.env.NODE_ENV !== "production") console.error("Error", error);
         }
+
+        await router.push("/home");
     };
 
     const addTags = async () => {
