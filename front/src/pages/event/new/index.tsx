@@ -66,7 +66,7 @@ export default function Page() {
     //   "limitation": 0,
     //   "record_url": "",
     // });
-    const URL = "http://localhost:40000";
+    const URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:40000";
     const { data: session } = useSession();
     
     useEffect(() => {

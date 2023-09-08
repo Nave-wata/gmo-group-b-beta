@@ -125,7 +125,7 @@ export default function Page() {
     })
 
     const router = useRouter();
-    const URL = "http://localhost:40000";
+    const URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:40000";
 
     useEffect(() => {
         if (router.isReady) {
