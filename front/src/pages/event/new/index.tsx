@@ -15,7 +15,7 @@ type Event = {
     "end_time": string,
     "location": string,
     "description": string,
-    "limitation": number,
+    "limitation": number|null,
 };
 
 type UserEntity = {
@@ -30,18 +30,31 @@ export default function Page() {
     const [isChecking, setIsChecking] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [formData, setFormData] = useState<Event>({
-        "create_user": "1",
-        "name": "Vue.js勉強会",
+        "create_user": "",
+        "name": "",
         "technologies": [
-            "フロントエンド",
-            "Vue.js",
+            "",
+            "",
         ],
-        "start_time": "2024-02-02 17:00",
-        "end_time": "2024-02-02 19:00",
-        "location": "オンライン",
-        "description": "Let's study Vue.js!!!",
-        "limitation": 20,
+        "start_time": "",
+        "end_time": "",
+        "location": "",
+        "description": "",
+        "limitation": null,
     });
+    // sample default value
+    // "create_user": "1",
+    //         "name": "Vue.js勉強会",
+    //         "technologies": [
+    //             "フロントエンド",
+    //             "Vue.js",
+    //         ],
+    //         "start_time": "2024-02-02 17:00",
+    //         "end_time": "2024-02-02 19:00",
+    //         "location": "オンライン",
+    //         "description": "Let's study Vue.js!!!",
+    //         "limitation": 20,
+
     //   const [formData, setFormData] = useState<Event>({
     //   "create_user": "",
     //   "name": "",
@@ -261,7 +274,7 @@ export default function Page() {
                                     <p className="col-3 ps-3">定員</p>
                                     <input className="form-control" type="number" name="limitation"
                                            placeholder="Default input" aria-label="default input example"
-                                           value={formData.limitation} onChange={handleChange} required></input>
+                                           onChange={handleChange} required></input>
                                 </label>
                             </div>
                             {/* <div className="d-flex justify-content-around mb-3">
