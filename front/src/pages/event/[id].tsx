@@ -14,6 +14,14 @@ const CalendarIcon = () => (
     </svg>
 )
 
+const TrashIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-trash-fill"
+         viewBox="0 0 16 16">
+        <path
+            d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1H2.5zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5zM8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5zm3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0z"/>
+    </svg>
+)
+
 type Event = {
     "id": number,
     "name": string,
@@ -58,6 +66,8 @@ type Joiner = {
 
 export default function Page() {
     const [isCalendarBtnHover, setIsCalendarBtnHover] = useState<boolean>(false);
+    const [isDeleteBtnHover, setIsDeleteBtnHover] = useState<boolean>(false);
+
     const handleCalendarBtnEnter = () => {
         setIsCalendarBtnHover(true);
     }
@@ -67,40 +77,40 @@ export default function Page() {
 
 
     const [event, setEvent] = useState<Event>({
-    "description": "Let's study Vue.js!!!",
-    "limitation": 20,
-    "record_url": "aaaa@bbbb",
-    "id": 1,
-    "name": "dummy",
-    "start_time": "2024-02-02T08:00:00.000Z",
-    "end_time": "2024-02-02T10:00:00.000Z",
-    "location": "オンライン",
-    "google_calender_event_id": "test",
-    "created_at": "2023-09-08T01:35:27.367Z",
-    "edit_at": "2023-09-08T01:35:27.367Z",
-    "user": {
+        "description": "Let's study Vue.js!!!",
+        "limitation": 20,
+        "record_url": "aaaa@bbbb",
         "id": 1,
-        "name": "reiya",
-        "email": "reiya4742@gmail.com",
-        "department": "none",
-        "token": "112413653104775313391",
-        "created_at": "2023-09-08T01:34:54.579Z",
-        "edit_at": "2023-09-08T01:34:54.579Z"
-    },
-    "event_technologies": [
-        {
+        "name": "dummy",
+        "start_time": "2024-02-02T08:00:00.000Z",
+        "end_time": "2024-02-02T10:00:00.000Z",
+        "location": "オンライン",
+        "google_calender_event_id": "test",
+        "created_at": "2023-09-08T01:35:27.367Z",
+        "edit_at": "2023-09-08T01:35:27.367Z",
+        "user": {
             "id": 1,
-            "created_at": "2023-09-08T01:35:27.373Z",
-            "edit_at": "2023-09-08T01:35:27.373Z",
-            "technology": {
+            "name": "reiya",
+            "email": "reiya4742@gmail.com",
+            "department": "none",
+            "token": "112413653104775313391",
+            "created_at": "2023-09-08T01:34:54.579Z",
+            "edit_at": "2023-09-08T01:34:54.579Z"
+        },
+        "event_technologies": [
+            {
                 "id": 1,
-                "name": "Vue.js",
-                "created_at": "2023-09-08T01:35:03.116Z",
-                "edit_at": "2023-09-08T01:35:03.116Z"
+                "created_at": "2023-09-08T01:35:27.373Z",
+                "edit_at": "2023-09-08T01:35:27.373Z",
+                "technology": {
+                    "id": 1,
+                    "name": "Vue.js",
+                    "created_at": "2023-09-08T01:35:03.116Z",
+                    "edit_at": "2023-09-08T01:35:03.116Z"
+                }
             }
-        }
-    ]
-});
+        ]
+    });
     // 現在の予約者数を保持するもの
     const [reserveNum, setReserveNum] = useState({
         "remaining": 15,
@@ -124,17 +134,17 @@ export default function Page() {
             axios.get(`${URL}/api/event/${eventId}`)
                 .then((res) => res.data)
                 .then((data) => setEvent(data))
-                .catch((e) => console.error("ERROR",e));
-                
+                .catch((e) => console.error("ERROR", e));
+
             axios.get(`${URL}/api/event/${eventId}/remaining`)
                 .then((res) => res.data)
                 .then((data) => setReserveNum(data))
-                .catch((e) => console.error("ERROR",e));
+                .catch((e) => console.error("ERROR", e));
 
             axios.get(`${URL}/api/user/event/${eventId}`)
                 .then((res) => res.data)
                 .then((data) => setJoiner(data))
-                .catch((e) => console.error("ERROR",e));
+                .catch((e) => console.error("ERROR", e));
         }
     }, [router, URL]);
 
@@ -162,7 +172,15 @@ export default function Page() {
         // Google Calendar APIにアクセス
         const getCalendarId: string = recordCalendar(event.name, event.location, event.description, convertedStartDate, convertedEndDate);
         window.alert("追加しました");
-        if (process.env.NODE_ENV !== "production") console.log("Event ID → "+getCalendarId);
+        if (process.env.NODE_ENV !== "production") console.log("Event ID → " + getCalendarId);
+    }
+
+    const onDeleteBtnClick = async () => {
+        if (process.env.NODE_ENV !== "production") console.log("カレンダーに追加する");
+
+        const eventId = router.query.id;
+        await axios.delete(`${URL}/api/event/${eventId}`);
+        await router.push("/home");
     }
 
     return (
@@ -209,17 +227,29 @@ export default function Page() {
                             <button className="btn btn-primary btn-lg col-9 mt-4" onClick={joinEvent}>
                                 イベントに参加
                             </button>
-                            <button>
-                                イベントをキャンセル
-                            </button>
                         </div>
-                        <div
-                            style={{padding: 5, justifyContent: "center", display: "inline-flex", borderRadius: 5, border: "solid 1px black", color: isCalendarBtnHover ? "white" : "gray", backgroundColor: isCalendarBtnHover ? "gray" : "white", position: "absolute", top: 5, right: 5}}
-                            onMouseEnter={handleCalendarBtnEnter} onMouseLeave={handleCalendarBtnLeave}
-                            onClick={onCalendarBtnClick}>
-                            <div style={{display: "inline-block", marginRight: "0.5rem"}}>カレンダーに追加する</div>
-                            <div style={{position: "relative", bottom: 3}}>
-                                <CalendarIcon/>
+                        <div style={{position: "absolute", top: 5, right: 5, display: "flex", flexDirection: "column"}}>
+                            <div
+                                style={{marginBottom: 5, padding: 5, justifyContent: "center", display: "inline-flex", borderRadius: 5, border: "solid 1px black", color: isCalendarBtnHover ? "white" : "gray", backgroundColor: isCalendarBtnHover ? "gray" : "white"}}
+                                onMouseEnter={handleCalendarBtnEnter} onMouseLeave={handleCalendarBtnLeave}
+                                onClick={onCalendarBtnClick}>
+                                <div style={{display: "inline-block", marginRight: "0.5rem"}}>カレンダーに追加する</div>
+                                <div style={{position: "relative", bottom: 3}}>
+                                    <CalendarIcon/>
+                                </div>
+                            </div>
+                            <div
+                                style={{padding: 5, justifyContent: "center", display: "inline-flex", borderRadius: 5, border: "solid 1px black", color: isDeleteBtnHover ? "white" : "gray", backgroundColor: isDeleteBtnHover ? "gray" : "white"}}
+                                onMouseEnter={() => {
+                                    setIsDeleteBtnHover(true);
+                                }} onMouseLeave={() => {
+                                setIsDeleteBtnHover(false);
+                            }}
+                                onClick={onDeleteBtnClick}>
+                                <div style={{display: "inline-block", marginRight: "0.5rem"}}>勉強会を削除する</div>
+                                <div style={{position: "relative", bottom: 3}}>
+                                    <TrashIcon/>
+                                </div>
                             </div>
                         </div>
                     </div>
